@@ -98,7 +98,7 @@ export default function GameView() {
             }}
           >
             <img
-              src="/characters/throne.png"
+              src="characters/throne.png"
               alt="Overlord on throne"
               style={{
                 maxWidth: "100%",

@@ -11,15 +11,6 @@ export interface Planet {
   owned: boolean;
 }
 
-export interface Leader {
-  id: string;
-  name: string;
-  loyalty: number;
-  fear: number;
-  greed: number;
-  planet: string;
-}
-
 export interface VisitorConditions {
   minCoins?: number;
   maxCoins?: number;
@@ -61,6 +52,7 @@ export interface Visitor {
   name: string;
   sprite: string;
   text: string;
+  weight?: number;
   conditions?: VisitorConditions;
   options: VisitorOption[];
 }
@@ -118,8 +110,22 @@ interface GameState {
 const planets: Planet[] = planetsData as Planet[];
 const visitors: Visitor[] = visitorsData as Visitor[];
 
-function getRandom<T>(arr: T[]): T {
-  return arr[Math.floor(Math.random() * arr.length)];
+function getRandom(arr: Visitor[]): Visitor {
+  const totalWeight = arr.reduce(
+    (sum, v) => sum + (v.weight ?? 1),
+    0
+  );
+
+  let r = Math.random() * totalWeight;
+  for (const v of arr) {
+    const w = v.weight ?? 1;
+    if (r < w) {
+      return v;
+    }
+    r -= w;
+  }
+
+  return arr[arr.length - 1];
 }
 
 function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
@@ -248,7 +254,6 @@ export const useGameStore = create<GameState>((set, get) => ({
               id: "bandit_success_ack",
               text: "Excellent work.",
               effects: {
-                coins: -40,
                 happiness: 20,
                 rebellionDelta: -15
               },
@@ -257,6 +262,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             }
           ]
         };
+
 
         set({
           currentVisitor: resultVisitor,
@@ -274,23 +280,26 @@ export const useGameStore = create<GameState>((set, get) => ({
               id: "bandit_fail_continue",
               text: "Yes, keep hunting.",
               effects: {
+                coins: -40,
+                rebellionDelta: -5,
                 special: "bandit_continue_contract"
               },
               reaction:
-                "Understood. I will not rest until their trail runs cold."
+                "Understood. I will keep tracking them. My fee rises with every passing day."
             },
             {
               id: "bandit_fail_stop",
               text: "No. Stand down.",
               effects: {
-                happiness: -5,
-                rebellionDelta: 5
+                happiness: -10,
+                rebellionDelta: 15
               },
               reaction:
-                "Very well. Just know that whatever they do next is on your head, overlord."
+                "Then whatever they do next is on your head, overlord. Your people know you let the criminal walk."
             }
           ]
         };
+
 
         set({
           currentVisitor: resultVisitor

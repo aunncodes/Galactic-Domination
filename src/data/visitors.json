@@ -3,30 +3,31 @@
     "id": "tax_officer",
     "name": "Galactic Tax Officer",
     "sprite": "tax_officer.png",
-    "text": "Supreme overlord, we can quietly increase taxation on your subjects this cycle.",
+    "text": "Supreme overlord {user}, I suggest we increase taxes on the population.",
+    "weight": 1.0,
     "conditions": {
       "minCoins": 0
     },
     "options": [
       {
         "id": "raise_taxes",
-        "text": "Yes. Squeeze them a little.",
+        "text": "Sure, we have many more great projects to fund in the future.",
         "effects": {
-          "coins": 75,
-          "happiness": -10,
+          "coins": 60,
+          "happiness": -8,
           "taxRateDelta": 0.02,
-          "rebellionDelta": 5
+          "rebellionDelta": 4
         },
-        "reaction": "Your wish is my command, my lord. The ledgers will bleed with new revenue."
+        "reaction": "Your wish is my command."
       },
       {
         "id": "decline_taxes",
-        "text": "No. Let them breathe.",
+        "text": "No, that will lead to a dissatisfied population.",
         "effects": {
-          "happiness": 5,
-          "rebellionDelta": -2
+          "happiness": 6,
+          "rebellionDelta": -3
         },
-        "reaction": "As you decree. The scribes will stand down and the people will whisper your mercy."
+        "reaction": "You are right, we need to let people get back on their feet."
       }
     ]
   },
@@ -34,29 +35,30 @@
     "id": "angry_citizen_high_tax",
     "name": "Angry Citizen",
     "sprite": "citizen.png",
-    "text": "The tax rates are far too high, overlord! We can barely survive.",
+    "text": "We, the working duck, are living hand to beak. Taxes are making it increasingly difficult to survive in this galaxy. We have families, Lord {user}..",
+    "weight": 0.9,
     "conditions": {
       "minTaxRate": 0.2
     },
     "options": [
       {
         "id": "lower_taxes_a_bit",
-        "text": "Fine. Ease the burden slightly.",
+        "text": "You have convinced me, I shall ease the burden.",
         "effects": {
           "taxRateDelta": -0.02,
           "happiness": 10,
           "rebellionDelta": -10
         },
-        "reaction": "Th-thank you, my lord. Maybe we can see our children eat again."
+        "reaction": "Thank you, my lord. You have restored my hope for the future."
       },
       {
         "id": "refuse_to_lower",
-        "text": "No. The empire needs every coin.",
+        "text": "No, you broke motherducker",
         "effects": {
           "happiness": -10,
           "rebellionDelta": 10
         },
-        "reaction": "Wha-no... please! You will squeeze us until we break."
+        "reaction": "You need to understand, king! You will squeeze us dry and leave us to rot."
       }
     ]
   },
@@ -65,6 +67,7 @@
     "name": "Shady Merchant",
     "sprite": "merchant.png",
     "text": "Overlord, I can sell you rare artifacts from distant worlds.",
+    "weight": 0.8,
     "conditions": {
       "minCoins": 50
     },
@@ -90,9 +93,10 @@
   },
   {
     "id": "space_wizard",
-    "name": "Void Wizard",
+    "name": "Fate Mage",
     "sprite": "space_wizard.png",
     "text": "Overlord... care to take a gamble with the currents of fate?",
+    "weight": 0.6,
     "conditions": {
       "minCoins": 10
     },
@@ -103,11 +107,11 @@
         "effects": {
           "special": "wizard_gamble"
         },
-        "reaction": "Excellent. The void stirs. Let us see whom it favors today."
+        "reaction": "Excellent. The void stirs. Let us see who it favors today."
       },
       {
         "id": "wizard_gamble_no",
-        "text": "No. I do not trust cosmic dice.",
+        "text": "Nah, I’ll just hope for good duck.",
         "effects": {
           "happiness": 2
         },
@@ -119,25 +123,30 @@
     "id": "bandit_hunter",
     "name": "Bounty Huntress",
     "sprite": "bandit_huntress.png",
-    "text": "Overlord, a criminal wreaks havoc on your subjects. Pay me and I will hunt them down.",
+    "text": "Overlord, a criminal wreaks havoc on your subjects. Pay me, and I will hunt them down.",
+    "weight": 0.3,
     "conditions": {
-      "minCoins": 0
+      "minCoins": 40,
+      "minRebellionChance": 10
     },
     "options": [
       {
         "id": "hire_bandit_hunter",
         "text": "Hire her to hunt the criminal.",
         "effects": {
+          "coins": -40,
+          "happiness": 5,
+          "rebellionDelta": -10,
           "special": "start_bandit_contract"
         },
         "reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
       },
       {
         "id": "ignore_criminal",
-        "text": "Let the criminal roam. It is beneath my concern.",
+        "text": "Shut up, you quacker",
         "effects": {
-          "happiness": -15,
-          "rebellionDelta": 10
+          "happiness": -12,
+          "rebellionDelta": 15
         },
         "reaction": "Then your people will bleed in the streets, not on my blade. Remember that choice."
       }
@@ -145,9 +154,10 @@
   },
   {
     "id": "prophet",
-    "name": "Veiled Prophet",
+    "name": "Witch",
     "sprite": "prophet.png",
     "text": "For a small offering, I will peer into the mood of your subjects.",
+    "weight": 0.5,
     "conditions": {
       "minCoins": 20,
       "minRebellionChance": 20
@@ -155,7 +165,7 @@
     "options": [
       {
         "id": "pay_prophet",
-        "text": "Pay her to read the currents.",
+        "text": "Since you’re so seducktive I’ll pay you.",
         "effects": {
           "coins": -30,
           "special": "prophet_pay"
@@ -164,7 +174,7 @@
       },
       {
         "id": "dismiss_prophet",
-        "text": "I do not need omens.",
+        "text": "How about you kiss my buttquack",
         "effects": {
           "happiness": -3
         },
@@ -176,18 +186,19 @@
     "id": "tax_collector",
     "name": "Imperial Tax Collector",
     "sprite": "tax_collector.png",
-    "text": "Overlord, your citizens have paid their taxes. These funds are now yours.",
+    "text": "Lord {user}, your citizens have paid their taxes. These funds are now yours.",
+    "weight": 1.0,
     "conditions": {
       "minCoins": 0
     },
     "options": [
       {
         "id": "accept_taxes",
-        "text": "Excellent. Add it to the treasury.",
+        "text": "Thanks you old geese-r",
         "effects": {
           "special": "tax_collector"
         },
-        "reaction": "At once, my lord. The coffers will gleam with the sweat of your subjects."
+        "reaction": "You’re welcome, I guess?"
       }
     ]
   },
@@ -195,7 +206,8 @@
     "id": "refugee_fleet",
     "name": "Refugee Fleet",
     "sprite": "refugees.png",
-    "text": "Overlord, a fleet of displaced aliens seeks shelter in your territory.",
+    "text": "Lord {user}, a fleet of displaced aliens seeks shelter in your territory.",
+    "weight": 0.8,
     "conditions": {
       "minCoins": 30
     },
@@ -207,7 +219,7 @@
           "coins": -30,
           "happiness": 15
         },
-        "reaction": "We are in your debt, great one. Your name will be a blessing in our stories."
+        "reaction": "We are in your debt. Your name will be sung with praises for eternity."
       },
       {
         "id": "turn_them_away",
@@ -217,183 +229,6 @@
           "rebellionDelta": 5
         },
         "reaction": "Please... no. Our children. The fleet turns away, and hatred follows in its wake."
-      }
-    ]
-  },
-
-
-
-  {
-    "id": "zorath_regent",
-    "name": "Regent Viri of Zorath",
-    "sprite": "viri.png",
-    "text": "Overlord, Zorath stands ready. With investment, we can harden our industry or pacify the streets.",
-    "conditions": {
-      "requiresOwnedPlanet": "zorath"
-    },
-    "options": [
-      {
-        "id": "zorath_invest_industry",
-        "text": "Invest in Zorath's forges.",
-        "effects": {
-          "coins": -30,
-          "happiness": 5
-        },
-        "reaction": "Zorath will roar brighter than ever. The workers will curse the hours but love the pay."
-      },
-      {
-        "id": "zorath_ignore",
-        "text": "Zorath will manage without special treatment.",
-        "effects": {
-          "happiness": -5
-        },
-        "reaction": "As you say, overlord. Zorath will endure, but it will remember who paid the price."
-      }
-    ]
-  },
-  {
-    "id": "karnax_envoy",
-    "name": "Drogan of Karnax Prime",
-    "sprite": "drogan.png",
-    "text": "Overlord, Karnax Prime watches your rise. We could pledge our forges and fleets to your banner.",
-    "conditions": {
-      "requiresPlanetNotOwned": "karnax"
-    },
-    "options": [
-      {
-        "id": "karnax_join",
-        "text": "Welcome Karnax into the empire.",
-        "effects": {
-          "addPlanetId": "karnax",
-          "coins": 40,
-          "happiness": 5
-        },
-        "reaction": "Then Karnax Prime bends the knee. Our docks and cannons now roar for you."
-      },
-      {
-        "id": "karnax_reject",
-        "text": "Refuse. Karnax is not worth the trouble.",
-        "effects": {
-          "happiness": -5,
-          "rebellionDelta": 5
-        },
-        "reaction": "So be it. Karnax will remember this slight when the stars change hands."
-      }
-    ]
-  },
-  {
-    "id": "elysion_ambassador",
-    "name": "Lyra of Elysion Spires",
-    "sprite": "lyra.png",
-    "text": "Overlord, the spires of Elysion offer culture, science, and a very large tax base.",
-    "conditions": {
-      "requiresPlanetNotOwned": "elysion"
-    },
-    "options": [
-      {
-        "id": "elysion_join",
-        "text": "Fold Elysion into the empire.",
-        "effects": {
-          "addPlanetId": "elysion",
-          "happiness": 10
-        },
-        "reaction": "Then the spires will shine in your colors. Our scholars already debate how to praise you."
-      },
-      {
-        "id": "elysion_reject",
-        "text": "Decline. Their decadence annoys me.",
-        "effects": {
-          "happiness": -10,
-          "rebellionDelta": 5
-        },
-        "reaction": "Decadent or not, overlord, our influence is vast. You may find our doors closed next time."
-      }
-    ]
-  },
-  {
-    "id": "vorath_envoy",
-    "name": "Forge-Lord Kor of Vorath",
-    "sprite": "kor.png",
-    "text": "Overlord, Vorath Forge offers raw power. We build weapons that rewrite battlefields.",
-    "conditions": {
-      "requiresPlanetNotOwned": "vorath"
-    },
-    "options": [
-      {
-        "id": "vorath_join",
-        "text": "Bring Vorath into the war machine.",
-        "effects": {
-          "addPlanetId": "vorath",
-          "coins": 30
-        },
-        "reaction": "Then our anvils sing for you. Every hammer blow will echo your name."
-      },
-      {
-        "id": "vorath_reject",
-        "text": "I do not need Vorath.",
-        "effects": {
-          "happiness": -5,
-          "rebellionDelta": 5
-        },
-        "reaction": "You will when the next war comes, overlord. Remember who you turned away."
-      }
-    ]
-  },
-  {
-    "id": "nyxia_envoy",
-    "name": "Shade-Queen Nyx of Nyxia Veil",
-    "sprite": "nyx.png",
-    "text": "Overlord, Nyxia Veil has spies in every court. Let us serve, and secrets will flow to you.",
-    "conditions": {
-      "requiresPlanetNotOwned": "nyxia"
-    },
-    "options": [
-      {
-        "id": "nyxia_join",
-        "text": "Accept Nyxia's allegiance.",
-        "effects": {
-          "addPlanetId": "nyxia",
-          "rebellionDelta": -10
-        },
-        "reaction": "The Veil closes around your enemies. They will never see you coming again."
-      },
-      {
-        "id": "nyxia_reject",
-        "text": "I do not deal in shadows.",
-        "effects": {
-          "rebellionDelta": 10
-        },
-        "reaction": "Then you will be surprised often, overlord. Secrets resent being ignored."
-      }
-    ]
-  },
-  {
-    "id": "talora_envoy",
-    "name": "Chancellor Talen of Talora Rings",
-    "sprite": "talen.png",
-    "text": "Overlord, the trade lanes of Talora Rings could enrich your coffers many times over.",
-    "conditions": {
-      "requiresPlanetNotOwned": "talora"
-    },
-    "options": [
-      {
-        "id": "talora_join",
-        "text": "Bring Talora into the fold.",
-        "effects": {
-          "addPlanetId": "talora",
-          "coins": 25,
-          "happiness": 5
-        },
-        "reaction": "Then every ship that circles our rings will toast your rule."
-      },
-      {
-        "id": "talora_reject",
-        "text": "Turn them away. I will take what I need elsewhere.",
-        "effects": {
-          "happiness": -5,
-          "rebellionDelta": 5
-        },
-        "reaction": "Trade finds new routes, overlord. Just pray those routes do not lead to your enemies."
       }
     ]
   }

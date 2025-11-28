@@ -114,7 +114,7 @@ export default function VisitorPanel() {
         }}
       >
         <img
-          src={`/characters/${visitor.sprite}`}
+          src={`characters/${visitor.sprite}`}
           alt={visitor.name}
           style={{ width: "100%", objectFit: "contain" }}
         />
