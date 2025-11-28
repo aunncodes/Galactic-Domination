@@ -105,6 +105,8 @@ interface GameState {
   nextVisitor: () => void;
   chooseOption: (option: VisitorOption) => void;
   acknowledgeDaySummary: () => void;
+
+  visitorsSeenToday: string[];
 }
 
 const planets: Planet[] = planetsData as Planet[];
@@ -214,6 +216,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
   gameOver: false,
   gameOverReason: null,
+
+  visitorsSeenToday: [],
 
   ownedPlanetsCount() {
     return get().planets.filter(p => p.owned).length;
@@ -325,7 +329,11 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (v.id === "tax_collector") {
         return false;
       }
-      return visitorMatchesConditions(v, state);
+      if (!visitorMatchesConditions(v, state)) {
+        return false;
+      }
+      return !state.visitorsSeenToday.includes(v.id);
+
     });
 
     if (available.length === 0) {
@@ -352,11 +360,15 @@ export const useGameStore = create<GameState>((set, get) => ({
     }
 
     set(prev => {
+      const currentVisitorId = prev.currentVisitor?.id || null;
+
       let coins = prev.player.coins + (effects.coins ?? 0);
       let happiness = prev.player.happiness + (effects.happiness ?? 0);
       let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
       let rebellionChance =
         prev.rebellionChance + (effects.rebellionDelta ?? 0);
+
+      let visitorsSeenToday = [...prev.visitorsSeenToday];
 
       coins = Math.max(0, coins);
       happiness = Math.max(0, Math.min(100, happiness));
@@ -471,6 +483,9 @@ export const useGameStore = create<GameState>((set, get) => ({
         combinedReaction.length > 0 ? combinedReaction : null;
 
       if (!gameOver) {
+        if (currentVisitorId && !visitorsSeenToday.includes(currentVisitorId)){
+          visitorsSeenToday.push(currentVisitorId)
+        }
         visitsToday += 1;
 
         const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
@@ -541,6 +556,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             dayStartCoins = coins;
             dayStartHappiness = happiness;
             dayStartRebellion = rebellionChance;
+            visitorsSeenToday = [];
           }
 
           if (coins < 0) coins = 0;
@@ -566,7 +582,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         banditNextReportDay,
         reactionText,
         gameOver,
-        gameOverReason
+        gameOverReason,
+        visitorsSeenToday
       };
     });
 
