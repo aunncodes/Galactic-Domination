@@ -4,7 +4,7 @@
     "name": "Galactic Tax Officer",
     "sprite": "tax_officer.png",
     "text": "Supreme overlord {user}, I suggest we increase taxes on the population.",
-    "weight": 1.0,
+    "weight": 0.5,
     "conditions": {
       "minCoins": 0
     },
@@ -66,7 +66,7 @@
     "id": "merchant",
     "name": "Shady Merchant",
     "sprite": "merchant.png",
-    "text": "Overlord, I can sell you rare artifacts from distant worlds.",
+    "text": "Overlord, I can sell you rare artifacts from distant worlds. It may make your citizens happier.",
     "weight": 0.8,
     "conditions": {
       "minCoins": 50
@@ -233,3 +233,4 @@
     ]
   }
 ]
+
