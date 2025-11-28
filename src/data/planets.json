@@ -1,0 +1,44 @@
+[
+  {
+    "id": "zorath",
+    "name": "Zorath",
+    "development": 3,
+    "rebellion": 15,
+    "owned": true
+  },
+  {
+    "id": "karnax",
+    "name": "Karnax Prime",
+    "development": 2,
+    "rebellion": 10,
+    "owned": false
+  },
+  {
+    "id": "elysion",
+    "name": "Elysion Spires",
+    "development": 4,
+    "rebellion": 5,
+    "owned": false
+  },
+  {
+    "id": "vorath",
+    "name": "Vorath Forge",
+    "development": 3,
+    "rebellion": 25,
+    "owned": false
+  },
+  {
+    "id": "nyxia",
+    "name": "Nyxia Veil",
+    "development": 5,
+    "rebellion": 8,
+    "owned": false
+  },
+  {
+    "id": "talora",
+    "name": "Talora Rings",
+    "development": 2,
+    "rebellion": 12,
+    "owned": false
+  }
+]
