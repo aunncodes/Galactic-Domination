@@ -5,9 +5,6 @@
     "sprite": "tax_officer.png",
     "text": "My liege, analysis shows that tax increases on the population shall benefit our economy. We will increase taxes as soon as you give permission.",
     "weight": 0.5,
-    "conditions": {
-      "minCoins": 0
-    },
     "options": [
       {
         "id": "raise_taxes",
@@ -68,9 +65,6 @@
     "sprite": "merchant.png",
     "text": "Overlord, I can sell you rare artifacts from distant worlds. It may make your citizens happier.",
     "weight": 0.6,
-    "conditions": {
-      "minCoins": 50
-    },
     "options": [
       {
         "id": "buy_artifacts",
@@ -97,9 +91,6 @@
     "sprite": "space_wizard.png",
     "text": "Overlord... care to take a gamble with the currents of fate?",
     "weight": 0.3,
-    "conditions": {
-      "minCoins": 10
-    },
     "options": [
       {
         "id": "wizard_gamble_yes",
@@ -126,7 +117,6 @@
     "text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
     "weight": 0.3,
     "conditions": {
-      "minCoins": 40,
       "minRebellionChance": 10
     },
     "options": [
@@ -159,7 +149,6 @@
     "text": "For a small offering, I will peer into the mood of your subjects.",
     "weight": 0.5,
     "conditions": {
-      "minCoins": 20,
       "minRebellionChance": 20
     },
     "options": [
@@ -189,9 +178,6 @@
     "sprite": "tax_collector.png",
     "text": "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
     "weight": 1.0,
-    "conditions": {
-      "minCoins": 0
-    },
     "options": [
       {
         "id": "accept_taxes",
@@ -209,9 +195,6 @@
     "sprite": "refugees.png",
     "text": "Lord {user}, a fleet of displaced aliens seeks shelter in your nest.",
     "weight": 0.8,
-    "conditions": {
-      "minCoins": 30
-    },
     "options": [
       {
         "id": "accept_refugees",
@@ -226,7 +209,7 @@
         "id": "turn_them_away",
         "text": "Turn them away. They can duck and cover wherever else they wish.",
         "effects": {
-          "happiness": -15,
+          "happiness": -10,
           "rebellionDelta": 5
         },
         "reaction": "Please... no. Our children. You heartless duck! You will regret this."

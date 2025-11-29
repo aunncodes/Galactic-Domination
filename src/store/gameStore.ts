@@ -486,7 +486,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       }
     }
 
-    if (!state.warActive && state.player.coins >= 200 && Math.random() < 0.1) {
+    if (!state.warActive && state.player.coins >= 200 && Math.random() < 0.3) {
       const enemyPlanet = getRandomUnownedPlanet(state.planets);
       if (enemyPlanet) {
         const attackCost = 80;
