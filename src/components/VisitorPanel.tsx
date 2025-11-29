@@ -70,8 +70,7 @@ export default function VisitorPanel() {
   }
 
   const handleOptionClick = (option: VisitorOption) => {
-    if (gameOver || isTyping) return;
-    if (reactionText) return;
+    if (gameOver || reactionText) return;
     chooseOption(option);
   };
 
