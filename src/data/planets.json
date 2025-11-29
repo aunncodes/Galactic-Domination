@@ -1,32 +1,32 @@
 [
   {
-    "id": "zorath",
-    "name": "Zorath",
+    "id": "kralvera",
+    "name": "Kral Vera",
     "owned": true
   },
   {
-    "id": "karnax",
-    "name": "Karnax Prime",
+    "id": "eltea",
+    "name": "Eltea",
     "owned": false
   },
   {
-    "id": "elysion",
-    "name": "Elysion Spires",
+    "id": "oltarion",
+    "name": "Oltarion",
     "owned": false
   },
   {
-    "id": "vorath",
-    "name": "Vorath Forge",
+    "id": "dalmera",
+    "name": "Dalmera",
     "owned": false
   },
   {
-    "id": "nyxia",
-    "name": "Nyxia Veil",
+    "id": "baidazaal",
+    "name": "Baidazaal",
     "owned": false
   },
   {
-    "id": "talora",
-    "name": "Talora Rings",
+    "id": "erus",
+    "name": "Erus",
     "owned": false
   }
 ]

@@ -323,6 +323,7 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   nextVisitor() {
+    if (import.meta.env.DEV) console.log(JSON.stringify(useGameStore.getState(), null, 2));
     const state = get();
     if (state.gameOver || state.showDaySummary) return;
 
@@ -436,7 +437,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       return;
     }
 
-    if (state.day % 10 === 0 && state.visitsToday === 0 && ownedCount > 0) {
+    if (state.day % 5 === 0 && state.visitsToday === 0 && ownedCount > 0) {
       const taxCollector = visitors.find(v => v.id === "tax_collector");
       if (taxCollector) {
         set({ currentVisitor: taxCollector });
@@ -567,8 +568,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       let visitorsSeenToday = [...prev.visitorsSeenToday];
 
       coins = Math.max(0, coins);
-      happiness = Math.max(0, Math.min(100, happiness));
-      taxRate = Math.max(0.01, Math.min(0.5, taxRate));
+      happiness = Math.max(0, happiness);
+      taxRate = Math.max(0, Math.min(0.5, taxRate));
       rebellionChance = Math.max(0, Math.min(100, rebellionChance));
 
       let planets = prev.planets;
@@ -631,26 +632,23 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (special === "prophet_pay") {
         let prophecy: string;
         if (rebellionChance >= 30) {
-          prophecy =
-            "Rebellion is brewing in the hearts of your subjects. You stand on the edge of a knife.";
+          prophecy = "Rebellion is coming. Try to make your citizens happy, or you will be overthrown.";
         } else if (rebellionChance >= 20) {
-          prophecy =
-            "Unease coils beneath the surface. The embers of dissent glow hot.";
+          prophecy = "Unease coils beneath the surface. The embers of dissent glow hot.";
         } else {
-          prophecy =
-            "For now, the galaxy lies quiet. But quiet is only the breath before a scream.";
+          prophecy = "Your rule is stable. Your subjects are content under your reign.";
         }
         extraReactionParts.push(prophecy);
       }
 
       if (special === "tax_collector" && ownedCount > 0) {
-        const baseTaxPerPlanet = 20;
+        const baseTaxPerPlanet = 100;
         const taxIncome = Math.round(
           ownedCount * baseTaxPerPlanet * taxRate
         );
         coins += taxIncome;
         extraReactionParts.push(
-          `Your ledgers swell by ${taxIncome} coins from your subjects’ labor.`
+          `Your ledgers swell by ${taxIncome} coins from your subjects' labor.`
         );
       }
 
@@ -833,7 +831,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             happiness = Math.min(100, happiness + 20);
           }
 
-          const rebellionThreshold = 40;
+          const rebellionThreshold = 30;
           if (rebellionChance >= rebellionThreshold && !gameOver) {
             const canLoseCoins = coins >= 100;
             const canLosePlanet = ownedCount > 0;
