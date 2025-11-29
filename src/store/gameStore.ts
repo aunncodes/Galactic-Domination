@@ -739,7 +739,8 @@ export const useGameStore = create<GameState>((set, get) => ({
           warEnemyPlanetId = null;
           warDaysElapsed = 0;
           warInvestment = 0;
-        } else if (warDaysElapsed >= maxWarDays) {
+        }
+        else if (warDaysElapsed >= maxWarDays) {
           const strength = warInvestment + Math.random() * 60;
           const difficulty = 80;
 
@@ -886,9 +887,7 @@ export const useGameStore = create<GameState>((set, get) => ({
             dayStartRebellion = rebellionChance;
             visitorsSeenToday = [];
           }
-
-          if (coins < 0) coins = 0;
-          rebellionChance = Math.max(0, Math.min(100, rebellionChance));
+          rebellionChance = Math.max(0, rebellionChance);
         }
       }
 
@@ -932,7 +931,7 @@ export const useGameStore = create<GameState>((set, get) => ({
     const state = get();
     if (state.gameOver) return;
 
-    set({ showDaySummary: false, reactionText: null });
+    set({ showDaySummary: false, reactionText: null, currentVisitor: null });
     get().nextVisitor();
   }
 }));
