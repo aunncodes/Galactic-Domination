@@ -52,21 +52,7 @@ export default function VisitorPanel() {
     return () => clearTimeout(timeout);
   }, [reactionText, showDaySummary, gameOver, nextVisitor, isTyping]);
 
-  if (!visitor) {
-    return (
-      <div
-        style={{
-          height: 450,
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          color: "#ccc"
-        }}
-      >
-        <p>No visitors right now. Click "Next visitor" to continue.</p>
-      </div>
-    );
-  }
+  if (!visitor) return null;
 
   const handleOptionClick = (option: VisitorOption) => {
     if (gameOver || reactionText) return;

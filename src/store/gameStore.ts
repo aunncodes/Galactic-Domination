@@ -66,12 +66,10 @@ export interface Visitor {
 }
 
 export interface Player {
+  name: string;
+  gender: "male" | "female" | null;
   coins: number;
   happiness: number;
-}
-
-interface Flags {
-  celebrationTriggered: boolean;
 }
 
 export interface DaySummary {
@@ -84,10 +82,10 @@ export interface DaySummary {
 interface GameState {
   player: Player;
   planets: Planet[];
+  setPlayerInfo: (name: string, gender: "male" | "female") => void;
 
   day: number;
   currentVisitor: Visitor | null;
-  flags: Flags;
 
   taxRate: number;
   rebellionChance: number;
@@ -154,7 +152,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
   if (c.minCoins !== undefined && state.player.coins < c.minCoins) return false;
   if (c.maxCoins !== undefined && state.player.coins > c.maxCoins) return false;
 
-  if (c.godDenied !== state.godDenied) return false;
+  if (c.godDenied !== undefined && c.godDenied !== state.godDenied) return false;
 
   if (
     c.minHappiness !== undefined &&
@@ -281,17 +279,27 @@ function createWarStatusVisitor(state: GameState): Visitor | null {
 
 export const useGameStore = create<GameState>((set, get) => ({
   player: {
+    name: "",
+    gender: null,
     coins: 100,
     happiness: 50
   },
 
   planets,
+  
+  setPlayerInfo(name, gender) {
+    set(prev => ({
+      ...prev,
+      player: {
+        ...prev.player,
+        name,
+        gender
+      }
+    }));
+  },
 
   day: 1,
   currentVisitor: null,
-  flags: {
-    celebrationTriggered: false
-  },
 
   taxRate: 0.15,
   rebellionChance: 0,
@@ -330,7 +338,10 @@ export const useGameStore = create<GameState>((set, get) => ({
   },
 
   nextVisitor() {
-    if (import.meta.env.DEV) console.log(JSON.stringify(useGameStore.getState(), null, 2));
+    if (import.meta.env.DEV) {
+      console.log(JSON.stringify(useGameStore.getState(), null, 2));
+      console.log("Loaded visitors:", visitors)
+    }
     const state = get();
     if (state.gameOver || state.showDaySummary) return;
 
@@ -590,8 +601,7 @@ export const useGameStore = create<GameState>((set, get) => ({
       let coins = prev.player.coins + (effects.coins ?? 0);
       let happiness = prev.player.happiness + (effects.happiness ?? 0);
       let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
-      let rebellionChance =
-        prev.rebellionChance + (effects.rebellionDelta ?? 0);
+      let rebellionChance = prev.rebellionChance + (effects.rebellionDelta ?? 0);
 
       let visitorsSeenToday = [...prev.visitorsSeenToday];
 
@@ -606,8 +616,9 @@ export const useGameStore = create<GameState>((set, get) => ({
           p.id === effects.addPlanetId ? { ...p, owned: true } : p
         );
       }
+      const name = prev.player.name;
+      const gender = prev.player.gender;
 
-      const flags: Flags = { ...prev.flags };
       let gameOver = prev.gameOver;
       let gameOverReason = prev.gameOverReason;
 
@@ -650,12 +661,12 @@ export const useGameStore = create<GameState>((set, get) => ({
           coins += 200;
           happiness = Math.min(100, happiness + 10);
           rebellionChance = Math.max(0, rebellionChance - 5);
-          extraReactionParts.push("The void laughs in your favor. Fortune pours into your coffers.");
+          extraReactionParts.push("You are an eggstraordinary being. Your vaults are now filled to the brim.");
         } else {
           coins = Math.max(0, coins - 100);
           happiness = Math.max(0, happiness - 15);
           rebellionChance = Math.min(100, rebellionChance + 5);
-          extraReactionParts.push("The stars flicker cold. Your wealth and goodwill bleed away.");
+          extraReactionParts.push("Your empire is slowly quacking apart. Your wealth and reputation are flying away.");
         }
       }
 
@@ -664,7 +675,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         if (rebellionChance >= 30) {
           prophecy = "Rebellion is coming. Try to make your citizens happy, or you will be overthrown.";
         } else if (rebellionChance >= 20) {
-          prophecy = "Unease coils beneath the surface. The embers of dissent glow hot.";
+          prophecy = "Ire blazes in the hearts of your ducks. The talons of rebellion may soon clutch your empire.";
         } else {
           prophecy = "Your rule is stable. Your subjects are content under your reign.";
         }
@@ -856,11 +867,6 @@ export const useGameStore = create<GameState>((set, get) => ({
             rebellionChance = Math.min(100, rebellionChance + 5);
           }
 
-          if (coins >= 500 && !flags.celebrationTriggered) {
-            flags.celebrationTriggered = true;
-            happiness = Math.min(100, happiness + 20);
-          }
-
           const rebellionThreshold = 30;
           if (rebellionChance >= rebellionThreshold && !gameOver) {
             const canLoseCoins = coins >= 100;
@@ -936,9 +942,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
       return {
         ...prev,
-        player: { coins, happiness },
+        player: { name, gender, coins, happiness },
         planets,
-        flags,
         taxRate,
         rebellionChance,
         day,
