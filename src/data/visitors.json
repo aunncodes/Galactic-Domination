@@ -67,7 +67,7 @@
 		"name": "Shady Merchant",
 		"sprite": "merchant.png",
 		"text": "Oh great warlord, I offer thee artifacts from worlds thousands of galaxies away. They might bring happiness to your subjects.",
-		"weight": 0.6,
+		"weight": 0.3,
 		"conditions": {
 			"minCoins": 50
 		},
@@ -260,6 +260,36 @@
 					"special": "god_deny"
 				},
 				"reaction": "You have made a mistake.. this will cost you dearly."
+			}
+		]
+	},
+	{
+		"id": "scientist",
+		"name": "Scientist",
+		"sprite": "scientist.png",
+		"text": "Lord {user}, I am close to a scientific breakthrough. But I just need more funding to complete my research.",
+		"weight": 0.4,
+		"conditions": {
+			"scienceStep": 0
+		},
+		"options": [
+			{
+				"id": "fund_scientist",
+				"text": "Very well, I will give you the funding you desire. (-40 coins)",
+				"effects": {
+					"coins": -40,
+					"happiness": 5,
+					"special": "science_chain_start"
+				},
+				"reaction": "Thank you, my liege! Your support shall not be forgotten."
+			},
+			{
+				"id": "decline_scientist",
+				"text": "I cannot allocate funds for frivolous research at this time.",
+				"effects": {
+					"happiness": -5
+				},
+				"reaction": "I see... I shall find another way to continue my work."
 			}
 		]
 	}

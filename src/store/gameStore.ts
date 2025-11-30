@@ -23,6 +23,7 @@ export interface VisitorConditions {
 	minRebellionChance?: number;
 	maxRebellionChance?: number;
 	godDenied?: boolean;
+	scienceStep?: number;
 }
 
 export type SpecialEffect =
@@ -35,7 +36,10 @@ export type SpecialEffect =
 	| "start_war_attack"
 	| "war_invest_more"
 	| "war_surrender"
-	| "god_deny";
+	| "god_deny"
+	| "science_chain_start"
+	| "science_chain_continue"
+	| "science_chain_complete";
 
 export interface VisitorOptionEffects {
 	coins?: number;
@@ -92,6 +96,8 @@ interface GameState {
 
 	visitsToday: number;
 	maxVisitorsPerDay: number;
+
+	scientistStep: number;
 
 	showDaySummary: boolean;
 	lastDaySummary: DaySummary | null;
@@ -150,6 +156,8 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.maxCoins !== undefined && state.player.coins > c.maxCoins) return false;
 
 	if (c.godDenied !== undefined && c.godDenied !== state.godDenied) return false;
+
+	if (c.scienceStep !== undefined && c.scienceStep !== state.scientistStep) return false;
 
 	if (c.minHappiness !== undefined && state.player.happiness < c.minHappiness) {
 		return false;
@@ -294,6 +302,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 	banditContractActive: false,
 	banditNextReportDay: null,
 
+	scientistStep: 0,
+
 	reactionText: null,
 
 	gameOver: false,
@@ -370,6 +380,61 @@ export const useGameStore = create<GameState>((set, get) => ({
 				],
 			};
 			set({ currentVisitor: godVisitor, godDenied: false });
+			return;
+		}
+
+		if (state.scientistStep === 1 && Math.random() < 0.4) {
+			const ScientistVisitor: Visitor = {
+				id: "scientist_more_funding",
+				name: "Scientist",
+				sprite: "scientist.png",
+				text: "Lord, we are close! Just a little more funding, and we will be able to make a breakthrough!",
+				options: [
+					{
+						id: "fund_science",
+						text: "Alright, take the funds. (-40 coins)",
+						effects: {
+							coins: -40,
+							happiness: 10,
+							special: "science_chain_continue",
+						},
+						reaction: "Thank you, my lord! I shall come back shortly with my findings!",
+					},
+					{
+						id: "decline_funding",
+						text: "I cannot spare the coins right now.",
+						effects: {
+							happiness: -5,
+							special: "science_chain_complete",
+						},
+						reaction: "It is a shame I have to give up when I'm so close. But alright.",
+					},
+				],
+			};
+			set({ currentVisitor: ScientistVisitor });
+			return;
+		}
+
+		if (state.scientistStep === 2 && Math.random() < 0.4) {
+			const ScientistVisitor: Visitor = {
+				id: "scientist_complete",
+				name: "Scientist",
+				sprite: "scientist.png",
+				text: "Thank you for your faith my lord! With your funding, we have achieved greatness!",
+				options: [
+					{
+						id: "accept",
+						text: "Awesome!",
+						effects: {
+							coins: 100,
+							happiness: 50,
+							special: "science_chain_complete",
+						},
+						reaction: "I will do my best to continue achieving glory for the empire!",
+					},
+				],
+			};
+			set({ currentVisitor: ScientistVisitor });
 			return;
 		}
 
@@ -579,6 +644,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
 			let rebellionChance = prev.rebellionChance + (effects.rebellionDelta ?? 0);
 
+			let scientistStep = prev.scientistStep;
+
 			let visitorsSeenToday = [...prev.visitorsSeenToday];
 
 			coins = Math.max(0, coins);
@@ -659,6 +726,18 @@ export const useGameStore = create<GameState>((set, get) => ({
 					prophecy = "Your rule is stable. Your subjects are content under your reign.";
 				}
 				extraReactionParts.push(prophecy);
+			}
+
+			if (special === "science_chain_start") {
+				scientistStep = 1;
+			}
+
+			if (special === "science_chain_continue") {
+				scientistStep = 2;
+			}
+
+			if (special === "science_chain_complete") {
+				scientistStep = 3;
 			}
 
 			if (special === "tax_collector" && ownedCount > 0) {
@@ -904,6 +983,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				visitsToday,
 				showDaySummary,
 				lastDaySummary,
+				scientistStep,
 				dayStartCoins,
 				dayStartHappiness,
 				dayStartRebellion,
