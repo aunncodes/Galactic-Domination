@@ -39,7 +39,8 @@ export type SpecialEffect =
 	| "god_deny"
 	| "science_chain_start"
 	| "science_chain_continue"
-	| "science_chain_complete";
+	| "science_chain_complete"
+	| "jester_hired";
 
 export interface VisitorOptionEffects {
 	coins?: number;
@@ -128,6 +129,7 @@ interface GameState {
 	warInvestment: number;
 	warPendingReport: string | null;
 	godDenied: boolean;
+	jesterHired: boolean;
 }
 
 const planets: Planet[] = planetsData as Planet[];
@@ -290,6 +292,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 	taxRate: 0.15,
 	rebellionChance: 0,
 
+	jesterHired: false,
+
 	visitsToday: 0,
 	maxVisitorsPerDay: 3,
 
@@ -381,6 +385,28 @@ export const useGameStore = create<GameState>((set, get) => ({
 			};
 			set({ currentVisitor: godVisitor, godDenied: false });
 			return;
+		}
+
+		if (state.jesterHired && state.visitorsSeenToday.indexOf("jester_entertainment") === -1) {
+			const jesterVisitor: Visitor = {
+				id: "jester_entertainment",
+				name: "Jester",
+				sprite: "jester.png",
+				text: "My lord, I have prepared some entertainment to lift your spirits!",
+				options: [
+					{
+						id: "jester_perform",
+						text: "Let's see it!",
+						effects: {
+							happiness: 5,
+						},
+						reaction: "I hope you enjoy!",
+					},
+				],
+			};
+			set({ currentVisitor: jesterVisitor });
+			return;
+
 		}
 
 		if (state.scientistStep === 1 && Math.random() < 0.3) {
@@ -528,7 +554,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			}
 		}
 
-		if (!state.warActive && Math.random() < 0.1) {
+		if (!state.warActive && Math.random() < 0.1 && state.day !== 1) {
 			const ourPlanet = getRandomOwnedPlanet(state.planets);
 			const enemyPlanet = getRandomUnownedPlanet(state.planets);
 			if (ourPlanet && enemyPlanet) {
@@ -663,6 +689,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let gameOver = prev.gameOver;
 			let gameOverReason = prev.gameOverReason;
 
+			let jesterHired = prev.jesterHired;
+
 			const ownedPlanets = planets.filter((p) => p.owned);
 			const ownedCount = ownedPlanets.length;
 
@@ -691,6 +719,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 			if (special === "god_deny") {
 				godDenied = true;
+			}
+
+			if (special === "jester_hired") {
+				jesterHired = true;
 			}
 
 			const baseReaction = option.reaction || "";
@@ -1001,6 +1033,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				warInvestment,
 				warPendingReport,
 				godDenied,
+				jesterHired,
 			};
 		});
 

@@ -292,5 +292,32 @@
 				"reaction": "I see... I shall find another way to continue my work."
 			}
 		]
+	},
+	{
+		"id": "jester",
+		"name": "Jester",
+		"sprite": "jester.png",
+		"text": "Great lord {user}! If you give me a bit of coin, I will entertain you and your subjects for the rest of your reign!",
+		"weight": 0.1,
+		"options": [
+			{
+				"id": "pay_jester",
+				"text": "Why not? (-50 coins)",
+				"effects": {
+					"coins": -50,
+					"happiness": 5,
+					"special": "jester_hired"
+				},
+				"reaction": "Thank you! I will return daily!"
+			},
+			{
+				"id": "decline_jester",
+				"text": "No thanks.",
+				"effects": {
+					"happiness": -2
+				},
+				"reaction": "Alright... maybe another time."
+			}
+		]
 	}
 ]
