@@ -5,6 +5,9 @@
     "sprite": "tax_officer.png",
     "text": "My liege, analysis shows that tax increases on the population shall benefit our economy. We will increase taxes as soon as you give permission.",
     "weight": 0.5,
+    "conditions": {
+      "minCoins": 0
+    },
     "options": [
       {
         "id": "raise_taxes",
@@ -63,14 +66,17 @@
     "id": "merchant",
     "name": "Shady Merchant",
     "sprite": "merchant.png",
-    "text": "Overlord, I can sell you rare artifacts from distant worlds. It may make your citizens happier.",
+    "text": "Oh great warlord, I offer thee artifacts from worlds thousands of galaxies away. They might bring happiness to your subjects.",
     "weight": 0.6,
+    "conditions": {
+      "minCoins": 50
+    },
     "options": [
       {
         "id": "buy_artifacts",
         "text": "I shall buy your artifacts..",
         "effects": {
-          "coins": -50,
+          "coins": -30,
           "happiness": 10
         },
         "reaction": "A pleasure doing business, overlord. I had to duck and dive to find this one."
@@ -91,6 +97,9 @@
     "sprite": "space_wizard.png",
     "text": "Overlord... care to take a gamble with the currents of fate?",
     "weight": 0.3,
+    "conditions": {
+      "minCoins": 10
+    },
     "options": [
       {
         "id": "wizard_gamble_yes",
@@ -117,6 +126,7 @@
     "text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
     "weight": 0.3,
     "conditions": {
+      "minCoins": 40,
       "minRebellionChance": 10
     },
     "options": [
@@ -149,12 +159,13 @@
     "text": "For a small offering, I will peer into the mood of your subjects.",
     "weight": 0.5,
     "conditions": {
+      "minCoins": 20,
       "minRebellionChance": 20
     },
     "options": [
       {
         "id": "pay_prophet",
-        "text": "I shall pay you, but if I notice any signs of trickery, I’ll turn you into peking duck. ",
+        "text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered.  ",
         "effects": {
           "coins": -30,
           "special": "prophet_pay"
@@ -178,6 +189,9 @@
     "sprite": "tax_collector.png",
     "text": "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
     "weight": 1.0,
+    "conditions": {
+      "minCoins": 0
+    },
     "options": [
       {
         "id": "accept_taxes",
@@ -193,8 +207,11 @@
     "id": "refugee_fleet",
     "name": "Refugee Fleet",
     "sprite": "refugees.png",
-    "text": "Lord {user}, a fleet of displaced aliens seeks shelter in your nest.",
+    "text": "Oh great Lord {user}, he who is the conqueror of vast space, we beg you to grant us sanctuary.",
     "weight": 0.8,
+    "conditions": {
+      "minCoins": 30
+    },
     "options": [
       {
         "id": "accept_refugees",
@@ -209,12 +226,41 @@
         "id": "turn_them_away",
         "text": "Turn them away. They can duck and cover wherever else they wish.",
         "effects": {
-          "happiness": -10,
+          "happiness": -15,
           "rebellionDelta": 5
         },
         "reaction": "Please... no. Our children. You heartless duck! You will regret this."
       }
     ]
+  },
+  {
+    "id": "god",
+    "name": "God",
+    "sprite": "god.png",
+    "text": "Mortal, I demand a sacrifice to prove your devotion.",
+    "weight": 0.1,
+    "conditions": {
+      "godDenied": false
+    },
+    "options": [
+      {
+        "id": "god_accept_sacrifice",
+        "text": "Offer a sacrifice (-30 coins)",
+        "effects": {
+          "coins": -30,
+          "rebellionDelta": -10
+        },
+        "reaction": "very cool ig 👍."
+      },
+      {
+        "id": "god_refuse_sacrifice",
+        "text": "Never!",
+        "effects": {
+          "happiness": 5,
+          "special": "god_deny"
+        },
+        "reaction": "You have made a mistake.. this will cost you dearly."
+      }
+    ]
   }
 ]
-

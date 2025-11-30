@@ -18,25 +18,24 @@ export default function VisitorPanel() {
 
   useEffect(() => {
     if (!visitor) {
-      setDisplayedText("");
-      setIsTyping(false);
       return;
     }
-
-    setDisplayedText("");
-    setIsTyping(true);
 
     const fullText = activeText;
     let idx = 0;
 
     const interval = setInterval(() => {
-      idx += 1;
-      setDisplayedText(fullText.slice(0, idx));
+        if (idx === 0) {
+            setIsTyping(true);
+            setDisplayedText("");
+        }
+        idx += 1;
+        setDisplayedText(fullText.slice(0, idx));
 
-      if (idx >= fullText.length) {
-        clearInterval(interval);
-        setIsTyping(false);
-      }
+        if (idx >= fullText.length) {
+            clearInterval(interval);
+            setIsTyping(false);
+        }
     }, 30);
 
     return () => clearInterval(interval);

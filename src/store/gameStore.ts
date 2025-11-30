@@ -22,6 +22,7 @@ export interface VisitorConditions {
   maxTaxRate?: number;
   minRebellionChance?: number;
   maxRebellionChance?: number;
+  godDenied?: boolean;
 }
 
 export type SpecialEffect =
@@ -33,7 +34,8 @@ export type SpecialEffect =
   | "start_war_defend"
   | "start_war_attack"
   | "war_invest_more"
-  | "war_surrender";
+  | "war_surrender"
+  | "god_deny";
 
 export interface VisitorOptionEffects {
   coins?: number;
@@ -121,6 +123,7 @@ interface GameState {
   warDaysElapsed: number;
   warInvestment: number;
   warPendingReport: string | null;
+  godDenied: boolean;
 }
 
 const planets: Planet[] = planetsData as Planet[];
@@ -150,6 +153,8 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 
   if (c.minCoins !== undefined && state.player.coins < c.minCoins) return false;
   if (c.maxCoins !== undefined && state.player.coins > c.maxCoins) return false;
+
+  if (c.godDenied !== state.godDenied) return false;
 
   if (
     c.minHappiness !== undefined &&
@@ -318,6 +323,8 @@ export const useGameStore = create<GameState>((set, get) => ({
   warInvestment: 0,
   warPendingReport: null,
 
+  godDenied: false,
+
   ownedPlanetsCount() {
     return get().planets.filter(p => p.owned).length;
   },
@@ -354,6 +361,27 @@ export const useGameStore = create<GameState>((set, get) => ({
         warPendingReport: null
       });
       return;
+    }
+
+    if (state.godDenied) {
+        const godVisitor: Visitor = {
+            id: "god_attack",
+            name: "God",
+            sprite: "god.png",
+            text: "You have refused to give me a sacrifice. Now you must face my wrath. Say goodbye to 25% of your coins.",
+            options: [
+            {
+                id: "god_accept_fate",
+                text: "I accept my fate.",
+                effects: {
+                  "coins": -Math.round(state.player.coins * 0.25),
+                },
+                reaction: "So be it."
+            }
+            ]
+        }
+        set({ currentVisitor: godVisitor, godDenied: false });
+        return;
     }
 
     if (state.warActive && state.visitsToday === 0) {
@@ -597,6 +625,8 @@ export const useGameStore = create<GameState>((set, get) => ({
       let warInvestment = prev.warInvestment;
       let warPendingReport = prev.warPendingReport;
 
+      let godDenied = prev.godDenied;
+
       if (special === "start_bandit_contract") {
         banditContractActive = true;
         banditNextReportDay = prev.day + 1;
@@ -605,6 +635,10 @@ export const useGameStore = create<GameState>((set, get) => ({
       if (special === "bandit_continue_contract") {
         banditContractActive = true;
         banditNextReportDay = prev.day + 1;
+      }
+
+      if (special === "god_deny") {
+        godDenied = true;
       }
 
       const baseReaction = option.reaction || "";
@@ -616,16 +650,12 @@ export const useGameStore = create<GameState>((set, get) => ({
           coins += 200;
           happiness = Math.min(100, happiness + 10);
           rebellionChance = Math.max(0, rebellionChance - 5);
-          extraReactionParts.push(
-            "The void laughs in your favor. Fortune pours into your coffers."
-          );
+          extraReactionParts.push("The void laughs in your favor. Fortune pours into your coffers.");
         } else {
           coins = Math.max(0, coins - 100);
           happiness = Math.max(0, happiness - 15);
           rebellionChance = Math.min(100, rebellionChance + 5);
-          extraReactionParts.push(
-            "The stars flicker cold. Your wealth and goodwill bleed away."
-          );
+          extraReactionParts.push("The stars flicker cold. Your wealth and goodwill bleed away.");
         }
       }
 
@@ -889,6 +919,21 @@ export const useGameStore = create<GameState>((set, get) => ({
         }
       }
 
+      if (gameOver && extraReactionParts.length > 0) {
+        const extraOnly = extraReactionParts
+          .map(s => s.trim())
+          .filter(Boolean)
+          .join(" ");
+
+        if (extraOnly.length > 0) {
+          gameOverReason = gameOverReason
+            ? `${extraOnly} ${gameOverReason}`
+            : extraOnly;
+        }
+
+        reactionText = null;
+      }
+
       return {
         ...prev,
         player: { coins, happiness },
@@ -915,7 +960,8 @@ export const useGameStore = create<GameState>((set, get) => ({
         warEnemyPlanetId,
         warDaysElapsed,
         warInvestment,
-        warPendingReport
+        warPendingReport,
+        godDenied
       };
     });
 
