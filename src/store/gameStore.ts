@@ -383,7 +383,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.scientistStep === 1 && Math.random() < 0.4) {
+		if (state.scientistStep === 1 && Math.random() < 0.3) {
 			const ScientistVisitor: Visitor = {
 				id: "scientist_more_funding",
 				name: "Scientist",
@@ -415,7 +415,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.scientistStep === 2 && Math.random() < 0.4) {
+		if (state.scientistStep === 2 && Math.random() < 0.3) {
 			const ScientistVisitor: Visitor = {
 				id: "scientist_complete",
 				name: "Scientist",
