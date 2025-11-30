@@ -1,32 +1,32 @@
 [
-  {
-    "id": "kralvera",
-    "name": "Kral Vera",
-    "owned": true
-  },
-  {
-    "id": "eltea",
-    "name": "Eltea",
-    "owned": false
-  },
-  {
-    "id": "oltarion",
-    "name": "Oltarion",
-    "owned": false
-  },
-  {
-    "id": "dalmera",
-    "name": "Dalmera",
-    "owned": false
-  },
-  {
-    "id": "baidazaal",
-    "name": "Baidazaal",
-    "owned": false
-  },
-  {
-    "id": "erus",
-    "name": "Erus",
-    "owned": false
-  }
+	{
+		"id": "kralvera",
+		"name": "Kral Vera",
+		"owned": true
+	},
+	{
+		"id": "eltea",
+		"name": "Eltea",
+		"owned": false
+	},
+	{
+		"id": "oltarion",
+		"name": "Oltarion",
+		"owned": false
+	},
+	{
+		"id": "dalmera",
+		"name": "Dalmera",
+		"owned": false
+	},
+	{
+		"id": "baidazaal",
+		"name": "Baidazaal",
+		"owned": false
+	},
+	{
+		"id": "erus",
+		"name": "Erus",
+		"owned": false
+	}
 ]

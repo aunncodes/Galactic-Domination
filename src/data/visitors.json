@@ -1,266 +1,266 @@
 [
-  {
-    "id": "tax_officer",
-    "name": "Galactic Tax Officer",
-    "sprite": "tax_officer.png",
-    "text": "My liege, analysis shows that tax increases on the population shall benefit our economy. We will increase taxes as soon as you give permission.",
-    "weight": 0.5,
-    "conditions": {
-      "minCoins": 0
-    },
-    "options": [
-      {
-        "id": "raise_taxes",
-        "text": "Very well then. The bread of the poor shall fill my vaults.",
-        "effects": {
-          "coins": 60,
-          "happiness": -8,
-          "taxRateDelta": 0.02,
-          "rebellionDelta": 4
-        },
-        "reaction": "Yes, my liege; your word is my command. Their bread shall be ours."
-      },
-      {
-        "id": "decline_taxes",
-        "text": "Fire the analysts. Clearly, their work ducks. Taxes shall not be raised.",
-        "effects": {
-          "happiness": 6,
-          "rebellionDelta": -3
-        },
-        "reaction": "Yes, my liege. We cannot risk ruffling the feathers of our fellow ducks."
-      }
-    ]
-  },
-  {
-    "id": "angry_citizen_high_tax",
-    "name": "Angry Citizen",
-    "sprite": "citizen.png",
-    "text": "We, the working duck, are living hand to beak. Taxes are making it increasingly difficult to survive in this galaxy. We have families, Lord {user}..",
-    "weight": 0.9,
-    "conditions": {
-      "minTaxRate": 0.2
-    },
-    "options": [
-      {
-        "id": "lower_taxes_a_bit",
-        "text": "You have convinced me, I shall take the burden off your wings.",
-        "effects": {
-          "taxRateDelta": -0.02,
-          "happiness": 10,
-          "rebellionDelta": -10
-        },
-        "reaction": "Thank you, my lord. You have restored my hope for the future. May the whole empire quack your praises."
-      },
-      {
-        "id": "refuse_to_lower",
-        "text": "Such insolence! There is no spot for broke motherduckers like you within my empire.",
-        "effects": {
-          "happiness": -10,
-          "rebellionDelta": 20
-        },
-        "reaction": "You are a terrible ducking duck-king!"
-      }
-    ]
-  },
-  {
-    "id": "merchant",
-    "name": "Shady Merchant",
-    "sprite": "merchant.png",
-    "text": "Oh great warlord, I offer thee artifacts from worlds thousands of galaxies away. They might bring happiness to your subjects.",
-    "weight": 0.6,
-    "conditions": {
-      "minCoins": 50
-    },
-    "options": [
-      {
-        "id": "buy_artifacts",
-        "text": "I shall buy your artifacts..",
-        "effects": {
-          "coins": -30,
-          "happiness": 10
-        },
-        "reaction": "A pleasure doing business, overlord. I had to duck and dive to find this one."
-      },
-      {
-        "id": "refuse_merchant",
-        "text": "This smells fishy.",
-        "effects": {
-          "happiness": -5
-        },
-        "reaction": "Tch. How unfortunate. To think you would let such a wondrous opportunity fly away."
-      }
-    ]
-  },
-  {
-    "id": "space_wizard",
-    "name": "Fate Mage",
-    "sprite": "space_wizard.png",
-    "text": "Overlord... care to take a gamble with the currents of fate?",
-    "weight": 0.3,
-    "conditions": {
-      "minCoins": 10
-    },
-    "options": [
-      {
-        "id": "wizard_gamble_yes",
-        "text": "Sure, after all, I’m a pretty lucky duck.",
-        "effects": {
-          "special": "wizard_gamble"
-        },
-        "reaction": "Excellent. Let’s see the outcome."
-      },
-      {
-        "id": "wizard_gamble_no",
-        "text": "I must reject your offer. I’ll just pray that I have a stroke of good duck instead.",
-        "effects": {
-          "happiness": 2
-        },
-        "reaction": "Such ignorance will cause irreparable quacks in your empire. Collapse is imminent. "
-      }
-    ]
-  },
-  {
-    "id": "bandit_hunter",
-    "name": "Bounty Huntress",
-    "sprite": "bandit_huntress.png",
-    "text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
-    "weight": 0.3,
-    "conditions": {
-      "minCoins": 40,
-      "minRebellionChance": 10
-    },
-    "options": [
-      {
-        "id": "hire_bandit_hunter",
-        "text": "Very well then. I shall pray that you catch them in your talons.",
-        "effects": {
-          "coins": -40,
-          "happiness": 5,
-          "rebellionDelta": -10,
-          "special": "start_bandit_contract"
-        },
-        "reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
-      },
-      {
-        "id": "ignore_criminal",
-        "text": "Shut up, you quacker",
-        "effects": {
-          "happiness": -12,
-          "rebellionDelta": 15
-        },
-        "reaction": "Then your people will bleed in the streets, and it will be on your conscience. Not mine."
-      }
-    ]
-  },
-  {
-    "id": "prophet",
-    "name": "Witch",
-    "sprite": "prophet.png",
-    "text": "For a small offering, I will peer into the mood of your subjects.",
-    "weight": 0.5,
-    "conditions": {
-      "minCoins": 20,
-      "minRebellionChance": 20
-    },
-    "options": [
-      {
-        "id": "pay_prophet",
-        "text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered.  ",
-        "effects": {
-          "coins": -30,
-          "special": "prophet_pay"
-        },
-        "reaction": "I will reveal some quacking knowledge, pay close attention."
-      },
-      {
-        "id": "dismiss_prophet",
-        "text": "Kiss my buttquack.",
-        "effects": {
-          "happiness": -3,
-          "rebellionDelta": 3
-        },
-        "reaction": "You bloody quackhead! My fellow witches shall not tolerate such rudeness, especially from an old geese-r like you!"
-      }
-    ]
-  },
-  {
-    "id": "tax_collector",
-    "name": "Imperial Tax Collector",
-    "sprite": "tax_collector.png",
-    "text": "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
-    "weight": 1.0,
-    "conditions": {
-      "minCoins": 0
-    },
-    "options": [
-      {
-        "id": "accept_taxes",
-        "text": "Good job.",
-        "effects": {
-          "special": "tax_collector"
-        },
-        "reaction": "I thank my liege for showing such kindness to a featherbrained individual like me."
-      }
-    ]
-  },
-  {
-    "id": "refugee_fleet",
-    "name": "Refugee Fleet",
-    "sprite": "refugees.png",
-    "text": "Oh great Lord {user}, he who is the conqueror of vast space, we beg you to grant us sanctuary.",
-    "weight": 0.8,
-    "conditions": {
-      "minCoins": 30
-    },
-    "options": [
-      {
-        "id": "accept_refugees",
-        "text": "We shall take them under our wing.",
-        "effects": {
-          "coins": -30,
-          "happiness": 15
-        },
-        "reaction": "We thank you. The little ducklings shall now quack your name with joy for all their lives."
-      },
-      {
-        "id": "turn_them_away",
-        "text": "Turn them away. They can duck and cover wherever else they wish.",
-        "effects": {
-          "happiness": -15,
-          "rebellionDelta": 5
-        },
-        "reaction": "Please... no. Our children. You heartless duck! You will regret this."
-      }
-    ]
-  },
-  {
-    "id": "god",
-    "name": "God",
-    "sprite": "god.png",
-    "text": "Mortal, I demand a sacrifice to prove your devotion.",
-    "weight": 0.1,
-    "conditions": {
-      "godDenied": false
-    },
-    "options": [
-      {
-        "id": "god_accept_sacrifice",
-        "text": "Offer a sacrifice (-30 coins)",
-        "effects": {
-          "coins": -30,
-          "rebellionDelta": -10
-        },
-        "reaction": "very cool ig 👍."
-      },
-      {
-        "id": "god_refuse_sacrifice",
-        "text": "Never!",
-        "effects": {
-          "happiness": 5,
-          "special": "god_deny"
-        },
-        "reaction": "You have made a mistake.. this will cost you dearly."
-      }
-    ]
-  }
+	{
+		"id": "tax_officer",
+		"name": "Galactic Tax Officer",
+		"sprite": "tax_officer.png",
+		"text": "My liege, analysis shows that tax increases on the population shall benefit our economy. We will increase taxes as soon as you give permission.",
+		"weight": 0.5,
+		"conditions": {
+			"minCoins": 0
+		},
+		"options": [
+			{
+				"id": "raise_taxes",
+				"text": "Very well then. The bread of the poor shall fill my vaults.",
+				"effects": {
+					"coins": 60,
+					"happiness": -8,
+					"taxRateDelta": 0.02,
+					"rebellionDelta": 4
+				},
+				"reaction": "Yes, my liege; your word is my command. Their bread shall be ours."
+			},
+			{
+				"id": "decline_taxes",
+				"text": "Fire the analysts. Clearly, their work ducks. Taxes shall not be raised.",
+				"effects": {
+					"happiness": 6,
+					"rebellionDelta": -3
+				},
+				"reaction": "Yes, my liege. We cannot risk ruffling the feathers of our fellow ducks."
+			}
+		]
+	},
+	{
+		"id": "angry_citizen_high_tax",
+		"name": "Angry Citizen",
+		"sprite": "citizen.png",
+		"text": "We, the working duck, are living hand to beak. Taxes are making it increasingly difficult to survive in this galaxy. We have families, Lord {user}..",
+		"weight": 0.9,
+		"conditions": {
+			"minTaxRate": 0.2
+		},
+		"options": [
+			{
+				"id": "lower_taxes_a_bit",
+				"text": "You have convinced me, I shall take the burden off your wings.",
+				"effects": {
+					"taxRateDelta": -0.02,
+					"happiness": 10,
+					"rebellionDelta": -10
+				},
+				"reaction": "Thank you, my lord. You have restored my hope for the future. May the whole empire quack your praises."
+			},
+			{
+				"id": "refuse_to_lower",
+				"text": "Such insolence! There is no spot for broke motherduckers like you within my empire.",
+				"effects": {
+					"happiness": -10,
+					"rebellionDelta": 20
+				},
+				"reaction": "You are a terrible ducking duck-king!"
+			}
+		]
+	},
+	{
+		"id": "merchant",
+		"name": "Shady Merchant",
+		"sprite": "merchant.png",
+		"text": "Oh great warlord, I offer thee artifacts from worlds thousands of galaxies away. They might bring happiness to your subjects.",
+		"weight": 0.6,
+		"conditions": {
+			"minCoins": 50
+		},
+		"options": [
+			{
+				"id": "buy_artifacts",
+				"text": "I shall buy your artifacts..",
+				"effects": {
+					"coins": -30,
+					"happiness": 10
+				},
+				"reaction": "A pleasure doing business, overlord. I had to duck and dive to find this one."
+			},
+			{
+				"id": "refuse_merchant",
+				"text": "This smells fishy.",
+				"effects": {
+					"happiness": -5
+				},
+				"reaction": "Tch. How unfortunate. To think you would let such a wondrous opportunity fly away."
+			}
+		]
+	},
+	{
+		"id": "space_wizard",
+		"name": "Fate Mage",
+		"sprite": "space_wizard.png",
+		"text": "Overlord... care to take a gamble with the currents of fate?",
+		"weight": 0.3,
+		"conditions": {
+			"minCoins": 10
+		},
+		"options": [
+			{
+				"id": "wizard_gamble_yes",
+				"text": "Sure, after all, I’m a pretty lucky duck.",
+				"effects": {
+					"special": "wizard_gamble"
+				},
+				"reaction": "Excellent. Let’s see the outcome."
+			},
+			{
+				"id": "wizard_gamble_no",
+				"text": "I must reject your offer. I’ll just pray that I have a stroke of good duck instead.",
+				"effects": {
+					"happiness": 2
+				},
+				"reaction": "Such ignorance will cause irreparable quacks in your empire. Collapse is imminent. "
+			}
+		]
+	},
+	{
+		"id": "bandit_hunter",
+		"name": "Bounty Huntress",
+		"sprite": "bandit_huntress.png",
+		"text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
+		"weight": 0.3,
+		"conditions": {
+			"minCoins": 40,
+			"minRebellionChance": 10
+		},
+		"options": [
+			{
+				"id": "hire_bandit_hunter",
+				"text": "Very well then. I shall pray that you catch them in your talons.",
+				"effects": {
+					"coins": -40,
+					"happiness": 5,
+					"rebellionDelta": -10,
+					"special": "start_bandit_contract"
+				},
+				"reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
+			},
+			{
+				"id": "ignore_criminal",
+				"text": "Shut up, you quacker",
+				"effects": {
+					"happiness": -12,
+					"rebellionDelta": 15
+				},
+				"reaction": "Then your people will bleed in the streets, and it will be on your conscience. Not mine."
+			}
+		]
+	},
+	{
+		"id": "prophet",
+		"name": "Witch",
+		"sprite": "prophet.png",
+		"text": "For a small offering, I will peer into the mood of your subjects.",
+		"weight": 0.5,
+		"conditions": {
+			"minCoins": 20,
+			"minRebellionChance": 20
+		},
+		"options": [
+			{
+				"id": "pay_prophet",
+				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered.  ",
+				"effects": {
+					"coins": -30,
+					"special": "prophet_pay"
+				},
+				"reaction": "I will reveal some quacking knowledge, pay close attention."
+			},
+			{
+				"id": "dismiss_prophet",
+				"text": "Kiss my buttquack.",
+				"effects": {
+					"happiness": -3,
+					"rebellionDelta": 3
+				},
+				"reaction": "You bloody quackhead! My fellow witches shall not tolerate such rudeness, especially from an old geese-r like you!"
+			}
+		]
+	},
+	{
+		"id": "tax_collector",
+		"name": "Imperial Tax Collector",
+		"sprite": "tax_collector.png",
+		"text": "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
+		"weight": 1.0,
+		"conditions": {
+			"minCoins": 0
+		},
+		"options": [
+			{
+				"id": "accept_taxes",
+				"text": "Good job.",
+				"effects": {
+					"special": "tax_collector"
+				},
+				"reaction": "I thank my liege for showing such kindness to a featherbrained individual like me."
+			}
+		]
+	},
+	{
+		"id": "refugee_fleet",
+		"name": "Refugee Fleet",
+		"sprite": "refugees.png",
+		"text": "Oh great Lord {user}, he who is the conqueror of vast space, we beg you to grant us sanctuary.",
+		"weight": 0.8,
+		"conditions": {
+			"minCoins": 30
+		},
+		"options": [
+			{
+				"id": "accept_refugees",
+				"text": "We shall take them under our wing.",
+				"effects": {
+					"coins": -30,
+					"happiness": 15
+				},
+				"reaction": "We thank you. The little ducklings shall now quack your name with joy for all their lives."
+			},
+			{
+				"id": "turn_them_away",
+				"text": "Turn them away. They can duck and cover wherever else they wish.",
+				"effects": {
+					"happiness": -15,
+					"rebellionDelta": 5
+				},
+				"reaction": "Please... no. Our children. You heartless duck! You will regret this."
+			}
+		]
+	},
+	{
+		"id": "god",
+		"name": "God",
+		"sprite": "god.png",
+		"text": "Mortal, I demand a sacrifice to prove your devotion.",
+		"weight": 0.1,
+		"conditions": {
+			"godDenied": false
+		},
+		"options": [
+			{
+				"id": "god_accept_sacrifice",
+				"text": "Offer a sacrifice (-30 coins)",
+				"effects": {
+					"coins": -30,
+					"rebellionDelta": -10
+				},
+				"reaction": "very cool ig 👍."
+			},
+			{
+				"id": "god_refuse_sacrifice",
+				"text": "Never!",
+				"effects": {
+					"happiness": 5,
+					"special": "god_deny"
+				},
+				"reaction": "You have made a mistake.. this will cost you dearly."
+			}
+		]
+	}
 ]
