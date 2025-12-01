@@ -399,6 +399,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 						text: "Let's see it!",
 						effects: {
 							happiness: 5,
+							rebellionDelta: -3,
 						},
 						reaction: "I hope you enjoy!",
 					},
@@ -731,16 +732,16 @@ export const useGameStore = create<GameState>((set, get) => ({
 			if (special === "wizard_gamble") {
 				const win = Math.random() < 0.5;
 				if (win) {
-					coins += 200;
+					coins += 150;
 					happiness = Math.min(100, happiness + 10);
 					rebellionChance = Math.max(0, rebellionChance - 5);
 					extraReactionParts.push(
 						"You are an eggstraordinary being. Your vaults are now filled to the brim."
 					);
 				} else {
-					coins = Math.max(0, coins - 100);
+					coins = Math.max(0, coins - 75);
 					happiness = Math.max(0, happiness - 15);
-					rebellionChance = Math.min(100, rebellionChance + 5);
+					rebellionChance += 5;
 					extraReactionParts.push(
 						"Your empire is slowly quacking apart. Your wealth and reputation are flying away."
 					);
@@ -905,6 +906,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 					"Your subjects are utterly miserable. Revolts spread across every world and you are overthrown.";
 			}
 
+			if (ownedCount === planets.length && !gameOver) {
+				gameOver = true;
+				gameOverReason =
+					"You successfully conquered every planet. You die a hero to your people, and are remembered as the greatest duck overlord of all time.";
+			}
+
 			let day = prev.day;
 			let visitsToday = prev.visitsToday;
 			let showDaySummary = prev.showDaySummary;
@@ -945,7 +952,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 						if (canLoseCoins && canLosePlanet) {
 							coins -= 100;
-							const lost = ownedPlanets[Math.floor(Math.random() * ownedPlanets.length)];
+							const lost = ownedPlanets[Math.floor(Math.random() * ownedCount)];
 							planets = planets.map((p) => (p.id === lost.id ? { ...p, owned: false } : p));
 							rebellionChance = 0;
 							extraReactionParts.push(

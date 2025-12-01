@@ -43,9 +43,9 @@
 		"options": [
 			{
 				"id": "lower_taxes_a_bit",
-				"text": "You have convinced me, I shall take the burden off your wings.",
+				"text": "You have convinced me, I shall take the burden off your wings. (-5% tax rate)",
 				"effects": {
-					"taxRateDelta": -0.02,
+					"taxRateDelta": -0.05,
 					"happiness": 10,
 					"rebellionDelta": -10
 				},
@@ -165,7 +165,7 @@
 		"options": [
 			{
 				"id": "pay_prophet",
-				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered.  ",
+				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered. (-30 coins)",
 				"effects": {
 					"coins": -30,
 					"special": "prophet_pay"
@@ -226,7 +226,7 @@
 				"id": "turn_them_away",
 				"text": "Turn them away. They can duck and cover wherever else they wish.",
 				"effects": {
-					"happiness": -15,
+					"happiness": -10,
 					"rebellionDelta": 5
 				},
 				"reaction": "Please... no. Our children. You heartless duck! You will regret this."
@@ -250,7 +250,7 @@
 					"coins": -30,
 					"rebellionDelta": -10
 				},
-				"reaction": "very cool ig 👍."
+				"reaction": "Your devotion is noted, mortal. May your reign be long and prosperous."
 			},
 			{
 				"id": "god_refuse_sacrifice",
