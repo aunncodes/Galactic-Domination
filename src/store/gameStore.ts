@@ -26,6 +26,7 @@ export interface VisitorConditions {
 	scienceStep?: number;
 	jesterHired?: boolean;
 	internHired?: boolean;
+	refugeeBanned?: boolean;
 }
 
 export type SpecialEffect =
@@ -36,14 +37,14 @@ export type SpecialEffect =
 	| "bandit_continue_contract"
 	| "start_war_defend"
 	| "start_war_attack"
-	| "war_invest_more"
 	| "war_surrender"
 	| "god_deny"
 	| "science_chain_start"
 	| "science_chain_continue"
 	| "science_chain_complete"
 	| "jester_hired"
-	| "intern_hired";
+	| "intern_hired"
+	| "refugee_ban";
 
 export interface VisitorOptionEffects {
 	coins?: number;
@@ -120,6 +121,7 @@ interface GameState {
 	godDenied: boolean;
 	jesterHired: boolean;
 	internHired: boolean;
+	refugeeBanned: boolean;
 	pendingDaySummary: boolean;
 	resetGame: () => void;
 }
@@ -138,6 +140,7 @@ const initialState = {
 	rebellionChance: 0,
 	jesterHired: false,
 	internHired: false,
+	refugeeBanned: false,
 	visitsToday: 0,
 	maxVisitorsPerDay: 5,
 	showDaySummary: false,
@@ -183,6 +186,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) return false;
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
+	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
 	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) return false;
@@ -233,11 +237,11 @@ function resolveWar(params: {
 } {
 	const { type, yourInvestment, enemyPlanetId, ourPlanetId } = params;
 
-	const baseEnemy = type === "defense" ? 50 : 60;
-	const enemyRandom = Math.floor(Math.random() * 80);
+	const baseEnemy = type === "defense" ? 30 : 50;
+	const enemyRandom = Math.floor(Math.random() * 40);
 	const enemyInvestment = baseEnemy + enemyRandom;
 
-	let winChance = yourInvestment / (yourInvestment + enemyInvestment);
+	let winChance = yourInvestment / (yourInvestment/1.5 + enemyInvestment);
 
 	if (type === "defense") {
 		winChance += 0.15;
@@ -374,6 +378,27 @@ export const useGameStore = create<GameState>((set, get) => ({
 				],
 			};
 			set({ currentVisitor: royalAdvisor });
+			return;
+		}
+
+		if (state.visitsToday == state.maxVisitorsPerDay - 1 && state.player.happiness >= 80) {
+			const happyCitizen: Visitor = {
+				id: "happy_citizen",
+				name: "Happy Citizen",
+				sprite: "happy_citizen.png",
+				text: "You are the coolest lord ever! Me and all my friends pooled together our money to make this donation to you!",
+				options: [
+					{
+						id: "acknowledge",
+						text: "Thank you so much!.",
+						reaction: "Anything for the greatest lord of all time!",
+						effects: {
+							coins: ownedCount * 15,
+						},
+					},
+				],
+			};
+			set({ currentVisitor: happyCitizen });
 			return;
 		}
 
@@ -660,7 +685,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 		}
 
 		if (
-			state.player.coins >= 200 &&
+			state.player.coins >= 150 &&
 			Math.random() < 0.3 &&
 			state.visitorsSeenToday.indexOf("war_general") === -1
 		) {
@@ -760,6 +785,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let banditNextReportDay = prev.banditNextReportDay;
 			let pendingDaySummary = prev.pendingDaySummary;
 			let godDenied = prev.godDenied;
+			let refugeeBanned = prev.refugeeBanned;
 
 			const currentVisitorId = prev.currentVisitor?.id || null;
 			const effects = option.effects || {};
@@ -799,6 +825,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 			if (special === "intern_hired") {
 				internHired = true;
+			}
+
+			if (special == "refugee_ban") {
+				refugeeBanned = true;
 			}
 
 			const baseReaction = option.reaction || "";
@@ -922,18 +952,13 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 				if (
 					currentVisitorId !== "jester_entertainment" &&
-					currentVisitorId !== "intern_money" &&
-					currentVisitorId !== "war_general_report"
+					currentVisitorId !== "intern_money"
 				)
 					visitsToday += 1;
 
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
 
 				if (endOfDay) {
-					if (happiness >= 80) {
-						coins += ownedCount * 15;
-					}
-
 					if (happiness < 20) {
 						rebellionChance = Math.min(100, rebellionChance + 5);
 					}
@@ -1027,6 +1052,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				godDenied,
 				jesterHired,
 				internHired,
+				refugeeBanned,
 				pendingDaySummary,
 			};
 		});
