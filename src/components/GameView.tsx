@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useGameStore } from "../store/gameStore";
 import VisitorPanel from "./VisitorPanel";
 import background from "../assets/background.png";
+import Stat from "./Stat.tsx";
 
 interface GameViewProps {
 	onGameOver: () => void;
@@ -59,13 +60,15 @@ export default function GameView({ onGameOver }: GameViewProps) {
 					fontSize: 14,
 				}}
 			>
-				<div>Day: {day}</div>
-				<div>Coins: {coins}</div>
-				<div>Happiness: {happiness}</div>
-				<div>
-					Planets: {ownedPlanetsCount()}/{totalPlanets}
-				</div>
-				<div>Tax rate: {taxPercent}%</div>
+		  <div>Day: {day}</div>
+
+		  <Stat label="Coins" value={coins} />
+
+		  <Stat label="Happiness" value={happiness} />
+
+		  <div>Planets: {ownedPlanetsCount()}/{totalPlanets}</div>
+
+		  <Stat label="Tax rate" value={taxPercent} suffix="%" />
 			</div>
 
 			<div

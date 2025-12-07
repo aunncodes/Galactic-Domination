@@ -145,7 +145,8 @@ export default function VisitorPanel() {
 				>
 					{visitor.options.map((option) => {
 						const delta = option.effects?.coins ?? 0;
-						const notEnoughCoins = delta < 0 && coins + delta < 0;
+						const notEnoughCoins = coins + delta <= 0;
+						const text = notEnoughCoins ? option.text.replace(/\([^)]*\)/g, "").trim() : option.text;
 
 						return (
 							<button
@@ -168,8 +169,8 @@ export default function VisitorPanel() {
 									opacity: notEnoughCoins || gameOver ? 0.5 : 1,
 								}}
 							>
-								{option.text}
-								{notEnoughCoins ? " (not enough coins)" : ""}
+								{text}
+								{notEnoughCoins ? " (Can't Afford)" : ""}
 							</button>
 						);
 					})}

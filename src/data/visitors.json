@@ -8,7 +8,7 @@
 		"options": [
 			{
 				"id": "raise_taxes",
-				"text": "Very well then. The bread of the poor shall fill my vaults.",
+				"text": "Very well then. The bread of the poor shall fill my vaults. (+2% tax rate)",
 				"effects": {
 					"coins": 20,
 					"happiness": -8,
@@ -68,7 +68,7 @@
 		"options": [
 			{
 				"id": "buy_artifacts",
-				"text": "I shall buy your artifacts..",
+				"text": "I shall buy your artifacts.. (-30 coins)",
 				"effects": {
 					"coins": -30,
 					"happiness": 10
@@ -122,7 +122,7 @@
 		"options": [
 			{
 				"id": "hire_bandit_hunter",
-				"text": "Very well then. I shall pray that you catch them in your talons.",
+				"text": "Very well then. I shall pray that you catch them in your talons. (-40 coins)",
 				"effects": {
 					"coins": -40,
 					"happiness": 5,
@@ -181,7 +181,7 @@
 		"options": [
 			{
 				"id": "accept_refugees",
-				"text": "I shall take you under my wing.",
+				"text": "I shall take you under my wing. (-30 coins)",
 				"effects": {
 					"coins": -30,
 					"happiness": 15
@@ -333,9 +333,10 @@
 		"options": [
 			{
 				"id": "hire_intern",
-				"text": "Alright, you seem eager enough. You're hired!",
+				"text": "Alright, you seem eager enough. You're hired! (-100 coins)",
 				"effects": {
 					"happiness": 5,
+					"coins": -100,
 					"special": "intern_hired"
 				},
 				"reaction": "Thank you, my lord! I won't let you down!"

@@ -48,9 +48,8 @@ export default function Intro({ onContinue }: IntroProps) {
 							height: "100%",
 							objectFit: "cover",
 						}}
-					>
-						<source src="intro.mov" type="video/mp4" />
-					</video>
+						src="intro.mov"
+					/>
 				</div>
 
 				<button
