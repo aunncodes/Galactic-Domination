@@ -60,7 +60,6 @@ export interface VisitorOptionEffects {
 }
 
 export interface VisitorOption {
-	id: string;
 	text: string;
 	effects?: VisitorOptionEffects;
 	reaction?: string;
@@ -343,7 +342,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "Welcome, {user}, to your new role as the ruler of this fledgling space empire. Your journey to galactic domination begins now. May your reign be prosperous and your enemies quack in fear!",
 				options: [
 					{
-						id: "royal_advisor_acknowledge",
 						text: "I am ready to lead.",
 						reaction: "Excellent! Let me teach you how to play.",
 					},
@@ -360,12 +358,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "To play, you must pick one of the options each visitor gives you. Manage your coins and happiness to avoid rebellion. Expand your empire by acquiring planets, and defend them from enemies. Good luck, {user}!",
 				options: [
 					{
-						id: "royal_advisor_acknowledge",
 						text: "Alright!",
 						reaction: "I wish you luck in your journey!",
 					},
 					{
-						id: "royal_advisor_more_tutorial",
 						text: "Awesome!",
 						reaction: "I wish you luck in your journey!",
 					},
@@ -383,7 +379,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "You are the coolest lord ever! Me and all my friends pooled together our money to make this donation to you!",
 				options: [
 					{
-						id: "acknowledge",
 						text: "Thank you so much!",
 						reaction: "Anything for the greatest lord of all time!",
 						effects: {
@@ -404,7 +399,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "You have refused to give me a sacrifice. Now you must face my wrath. Say goodbye to 25% of your coins.",
 				options: [
 					{
-						id: "god_accept_fate",
 						text: "I accept my fate.",
 						effects: {
 							coins: -Math.round(state.player.coins * 0.25),
@@ -425,7 +419,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "My lord, I have prepared some entertainment to lift your spirits!",
 				options: [
 					{
-						id: "jester_perform",
 						text: "Let's see it!",
 						effects: {
 							happiness: 5,
@@ -456,7 +449,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: internTexts[Math.floor(Math.random() * internTexts.length)],
 				options: [
 					{
-						id: "intern_give",
 						text: "Awesome!",
 						effects: {
 							coins: 10,
@@ -478,7 +470,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "Lord, we are close! Just a little more funding, and we will be able to make a breakthrough!",
 				options: [
 					{
-						id: "fund_science",
 						text: "Alright, take the funds. (-30 coins)",
 						effects: {
 							coins: -30,
@@ -488,7 +479,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 						reaction: "Thank you, my lord! I shall come back shortly with my findings!",
 					},
 					{
-						id: "decline_funding",
 						text: "I cannot spare the coins right now.",
 						effects: {
 							happiness: -5,
@@ -510,7 +500,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "Thank you for your faith my lord! With your funding, we have achieved greatness!",
 				options: [
 					{
-						id: "accept",
 						text: "Awesome!",
 						effects: {
 							coins: 100,
@@ -536,7 +525,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: "Overlord, I have found the criminal and dealt with them. Your subjects are safer now.",
 					options: [
 						{
-							id: "bounty_success_ack",
 							text: "Excellent work.",
 							effects: {
 								happiness: 20,
@@ -560,7 +548,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: "I have not yet found the criminal, overlord. They are elusive. Shall I continue the hunt?",
 					options: [
 						{
-							id: "bounty_fail_continue",
 							text: "Yes, keep hunting. (-30 Coins)",
 							effects: {
 								coins: -30,
@@ -570,7 +557,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "Understood. I will keep tracking them. My fee rises with every passing day.",
 						},
 						{
-							id: "bounty_fail_stop",
 							text: "No. Stand down.",
 							effects: {
 								happiness: -10,
@@ -597,7 +583,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				text: "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
 				options: [
 					{
-						id: "accept_taxes",
 						text: "Good job.",
 						effects: {
 							special: "tax_collector",
@@ -624,7 +609,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, our planet ${ourPlanet.name} is being attacked by ${enemyPlanet.name}. We must decide our investment.`,
 					options: [
 						{
-							id: "defend_planet_normal",
 							text: `Defend ${ourPlanet.name} (-${defendCost} coins)`,
 							effects: {
 								coins: -defendCost,
@@ -636,7 +620,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will do our best with the resources given.",
 						},
 						{
-							id: "defend_planet_heavy",
 							text: `Invest heavily in the defense (-${heavyDefendCost} coins)`,
 							effects: {
 								coins: -heavyDefendCost,
@@ -648,7 +631,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will throw everything we have at the enemy.",
 						},
 						{
-							id: "abandon_planet",
 							text: `We cannot afford it. Abandon ${ourPlanet.name}.`,
 							effects: {
 								special: "war_surrender",
@@ -678,7 +660,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, for an investment of coins we can attack ${enemyPlanet.name}. How much shall we commit?`,
 					options: [
 						{
-							id: "start_attack_normal",
 							text: `Attack ${enemyPlanet.name} (-${attackCost} coins)`,
 							effects: {
 								coins: -attackCost,
@@ -689,7 +670,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will create a solid force.",
 						},
 						{
-							id: "start_attack_heavy",
 							text: `Launch a massive invasion (-${heavyAttackCost} coins)`,
 							effects: {
 								coins: -heavyAttackCost,
@@ -700,7 +680,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will overwhelm them with sheer power.",
 						},
 						{
-							id: "decline_attack",
 							text: "Not now.",
 							reaction: "Very well. The army will remain on standby.",
 						},

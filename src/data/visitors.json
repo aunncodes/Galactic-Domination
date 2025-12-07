@@ -7,7 +7,6 @@
 		"weight": 0.5,
 		"options": [
 			{
-				"id": "raise_taxes",
 				"text": "Very well then. The bread of the poor shall fill my vaults. (+2% tax rate)",
 				"effects": {
 					"coins": 20,
@@ -18,7 +17,6 @@
 				"reaction": "Yes, my liege; your word is my command. Their bread shall be ours."
 			},
 			{
-				"id": "decline_taxes",
 				"text": "Fire the analysts. Clearly, their work ducks. Taxes shall not be raised.",
 				"effects": {
 					"happiness": 6,
@@ -39,7 +37,6 @@
 		},
 		"options": [
 			{
-				"id": "lower_taxes_a_bit",
 				"text": "You have convinced me, I shall take the burden off your wings. (-5% tax rate)",
 				"effects": {
 					"taxRateDelta": -0.05,
@@ -49,7 +46,6 @@
 				"reaction": "Thank you, my lord. You have restored my hope for the future. May the whole empire quack your praises."
 			},
 			{
-				"id": "refuse_to_lower",
 				"text": "Such insolence! There is no spot for broke motherduckers like you within my empire.",
 				"effects": {
 					"happiness": -10,
@@ -67,7 +63,6 @@
 		"weight": 0.3,
 		"options": [
 			{
-				"id": "buy_artifacts",
 				"text": "I shall buy your artifacts.. (-30 coins)",
 				"effects": {
 					"coins": -30,
@@ -76,7 +71,6 @@
 				"reaction": "A pleasure doing business, overlord. I had to duck and dive to find this one."
 			},
 			{
-				"id": "refuse_merchant",
 				"text": "This smells fishy.",
 				"effects": {
 					"happiness": -5
@@ -93,7 +87,6 @@
 		"weight": 0.3,
 		"options": [
 			{
-				"id": "wizard_gamble_yes",
 				"text": "Sure, after all, I’m a pretty lucky duck.",
 				"effects": {
 					"special": "wizard_gamble"
@@ -101,7 +94,6 @@
 				"reaction": "Excellent!"
 			},
 			{
-				"id": "wizard_gamble_no",
 				"text": "I must reject your offer. I’ll just pray that I have a stroke of good duck instead.",
 				"effects": {
 					"happiness": 2
@@ -121,7 +113,6 @@
 		},
 		"options": [
 			{
-				"id": "hire_bounty_hunter",
 				"text": "Very well then. I shall pray that you catch them in your talons. (-40 coins)",
 				"effects": {
 					"coins": -40,
@@ -132,7 +123,6 @@
 				"reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
 			},
 			{
-				"id": "ignore_criminal",
 				"text": "Shut up, you quacker",
 				"effects": {
 					"happiness": -12,
@@ -153,7 +143,6 @@
 		},
 		"options": [
 			{
-				"id": "pay_prophet",
 				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered. (-30 coins)",
 				"effects": {
 					"coins": -30,
@@ -162,7 +151,6 @@
 				"reaction": "I will reveal some quacking knowledge, pay close attention."
 			},
 			{
-				"id": "dismiss_prophet",
 				"text": "Kiss my buttquack.",
 				"effects": {
 					"happiness": -3,
@@ -183,7 +171,6 @@
 		},
 		"options": [
 			{
-				"id": "accept_refugees",
 				"text": "I shall take you under my wing. (-30 coins)",
 				"effects": {
 					"coins": -30,
@@ -192,7 +179,6 @@
 				"reaction": "We thank you. The little ducklings shall now quack your name with joy for all their lives."
 			},
 			{
-				"id": "turn_them_away",
 				"text": "Go away! You can duck and cover wherever else you wish.",
 				"effects": {
 					"happiness": -10,
@@ -213,7 +199,6 @@
 		},
 		"options": [
 			{
-				"id": "god_accept_sacrifice",
 				"text": "Offer a sacrifice (-30 coins)",
 				"effects": {
 					"coins": -30,
@@ -222,7 +207,6 @@
 				"reaction": "Your devotion is noted, mortal. May your reign be long and prosperous."
 			},
 			{
-				"id": "god_refuse_sacrifice",
 				"text": "Never!",
 				"effects": {
 					"happiness": 5,
@@ -243,7 +227,6 @@
 		},
 		"options": [
 			{
-				"id": "fund_scientist",
 				"text": "Very well, I will give you the funding you desire. (-30 coins)",
 				"effects": {
 					"coins": -30,
@@ -253,7 +236,6 @@
 				"reaction": "Thank you, my liege! Your support shall not be forgotten."
 			},
 			{
-				"id": "decline_scientist",
 				"text": "I cannot allocate funds for frivolous research at this time.",
 				"effects": {
 					"happiness": -5
@@ -273,7 +255,6 @@
 		},
 		"options": [
 			{
-				"id": "pay_jester",
 				"text": "Why not? (-50 coins)",
 				"effects": {
 					"coins": -50,
@@ -283,7 +264,6 @@
 				"reaction": "Thank you! I will return daily!"
 			},
 			{
-				"id": "decline_jester",
 				"text": "No thanks.",
 				"effects": {
 					"happiness": -2
@@ -304,7 +284,6 @@
 		},
 		"options": [
 			{
-				"id": "meet_demands",
 				"text": "Very well, I shall lower taxes and improve living conditions. (-5% tax rate)",
 				"effects": {
 					"taxRateDelta": -0.05,
@@ -314,7 +293,6 @@
 				"reaction": "Thank you, Lord {user}. You are truly an eggstrordinary leader."
 			},
 			{
-				"id": "suppress_protest",
 				"text": "Silence! Anyone caught protesting will be punished severely.",
 				"effects": {
 					"happiness": -15,
@@ -335,7 +313,6 @@
 		},
 		"options": [
 			{
-				"id": "hire_intern",
 				"text": "Alright, you seem eager enough. You're hired! (-75 coins)",
 				"effects": {
 					"happiness": 5,
@@ -345,7 +322,6 @@
 				"reaction": "Thank you, my lord! I won't let you down!"
 			},
 			{
-				"id": "decline_intern",
 				"text": "No thanks, we don't need more help right now.",
 				"effects": {
 					"happiness": -2
@@ -362,7 +338,6 @@
 		"weight": 0.2,
 		"options": [
 			{
-				"id": "implement_ideas",
 				"text": "Very well, implement your ideas.",
 				"effects": {
 					"coins": 50,
@@ -372,7 +347,6 @@
 				"reaction": "Thank you, my lord! Your coffers shall overflow!"
 			},
 			{
-				"id": "decline_ideas",
 				"text": "No thanks, I prefer to keep my people happy.",
 				"effects": {
 					"happiness": 15,
@@ -393,7 +367,6 @@
 		},
 		"options": [
 			{
-				"id": "hire_donald",
 				"text": "Alright Donald, you got this. (-75 coins)",
 				"effects": {
 					"coins": -75,
@@ -404,7 +377,6 @@
 				"reaction": "Thank you, lord! You won't regret this, believe me!"
 			},
 			{
-				"id": "decline_donald",
 				"text": "No thanks, I prefer to keep my empire inclusive.",
 				"effects": {
 					"happiness": 10,
