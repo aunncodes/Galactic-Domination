@@ -63,10 +63,10 @@
 		"weight": 0.3,
 		"options": [
 			{
-				"text": "I shall buy your artifacts.. (-30 coins)",
+				"text": "I shall buy your artifacts.. (-20 coins)",
 				"effects": {
-					"coins": -30,
-					"happiness": 10
+					"coins": -20,
+					"happiness": 15
 				},
 				"reaction": "A pleasure doing business, overlord. I had to duck and dive to find this one."
 			},
