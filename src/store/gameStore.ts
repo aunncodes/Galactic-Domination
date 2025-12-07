@@ -27,6 +27,7 @@ export interface VisitorConditions {
 	jesterHired?: boolean;
 	internHired?: boolean;
 	refugeeBanned?: boolean;
+	banditContractActive?: boolean;
 }
 
 export type SpecialEffect =
@@ -186,6 +187,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) return false;
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
+	if (c.banditContractActive !== undefined && c.banditContractActive !== state.banditContractActive) return false;
 	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
@@ -537,17 +539,13 @@ export const useGameStore = create<GameState>((set, get) => ({
 			state.day >= state.banditNextReportDay &&
 			state.visitsToday === 0
 		) {
-			const baseBandit = visitors.find((v) => v.id === "bandit_hunter");
-			const name = baseBandit?.name ?? "Bounty Huntress";
-			const sprite = baseBandit?.sprite ?? "bandit_huntress.png";
-
 			const success = Math.random() < 0.6;
 
 			if (success) {
 				const resultVisitor: Visitor = {
 					id: "bandit_result_success",
-					name,
-					sprite,
+					name: "Bandit Huntress",
+					sprite: "bandit_huntress.png",
 					text: "Overlord, I have found the criminal and dealt with them. Your subjects are safer now.",
 					options: [
 						{
@@ -570,15 +568,15 @@ export const useGameStore = create<GameState>((set, get) => ({
 			} else {
 				const resultVisitor: Visitor = {
 					id: "bandit_result_fail",
-					name,
-					sprite,
+					name: "Bandit Huntress",
+					sprite: "bandit_huntress.png",
 					text: "I have not yet found the criminal, overlord. They are elusive. Shall I continue the hunt?",
 					options: [
 						{
 							id: "bandit_fail_continue",
-							text: "Yes, keep hunting.",
+							text: "Yes, keep hunting. (-30 Coins)",
 							effects: {
-								coins: -40,
+								coins: -30,
 								rebellionDelta: -5,
 								special: "bandit_continue_contract",
 							},

@@ -117,7 +117,7 @@
 		"text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
 		"weight": 0.3,
 		"conditions": {
-			"minRebellionChance": 10
+			"banditContractActive": false
 		},
 		"options": [
 			{
