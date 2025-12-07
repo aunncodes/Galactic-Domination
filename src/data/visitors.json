@@ -320,5 +320,62 @@
 				"reaction": "You will regret this, tyrant! The people will rise against you!"
 			}
 		]
+	},
+	{
+		"id": "Intern",
+		"name": "Intern",
+		"sprite": "intern.png",
+		"text": "Overlord! If you hire me, I promise to work hard and make your empire money!",
+		"weight": 0.3,
+		"conditions": {
+			"internHired": false
+		},
+		"options": [
+			{
+				"id": "hire_intern",
+				"text": "Alright, you seem eager enough. You're hired!",
+				"effects": {
+					"happiness": 5,
+					"special": "intern_hired"
+				},
+				"reaction": "Thank you, my lord! I won't let you down!"
+			},
+			{
+				"id": "decline_intern",
+				"text": "No thanks, we don't need more help right now.",
+				"effects": {
+					"happiness": -2
+				},
+				"reaction": "Oh... alright. Maybe another time."
+			}
+		]
+	},
+	{
+		"id": "Politician",
+		"name": "Politician",
+		"sprite": "politician.png",
+		"text": "Great Lord {user}, I have ideas to monetize your country! The people may not like it, but it will certainly make you money!",
+		"weight": 0.2,
+		"options": [
+			{
+				"id": "implement_ideas",
+				"text": "Very well, implement your ideas.",
+				"effects": {
+					"coins": 50,
+					"happiness": -10,
+					"rebellionDelta": 10
+				},
+				"reaction": "Thank you, my lord! Your coffers shall overflow!"
+			},
+			{
+				"id": "decline_ideas",
+				"text": "No thanks, I prefer to keep my people happy.",
+				"effects": {
+					"happiness": 15,
+					"rebellionDelta": -5
+				},
+				"reaction": "I see... perhaps another time then."
+			}
+		]
 	}
 ]

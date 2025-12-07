@@ -25,6 +25,7 @@ export interface VisitorConditions {
 	godDenied?: boolean;
 	scienceStep?: number;
 	jesterHired?: boolean;
+	internHired?: boolean;
 }
 
 export type SpecialEffect =
@@ -41,7 +42,8 @@ export type SpecialEffect =
 	| "science_chain_start"
 	| "science_chain_continue"
 	| "science_chain_complete"
-	| "jester_hired";
+	| "jester_hired"
+	| "intern_hired";
 
 export interface VisitorOptionEffects {
 	coins?: number;
@@ -123,6 +125,7 @@ interface GameState {
 	warPendingReport: string | null;
 	godDenied: boolean;
 	jesterHired: boolean;
+	internHired: boolean;
 	pendingDaySummary: boolean;
 	resetGame: () => void;
 }
@@ -140,6 +143,7 @@ const initialState = {
 	taxRate: 0.15,
 	rebellionChance: 0,
 	jesterHired: false,
+	internHired: false,
 	visitsToday: 0,
 	maxVisitorsPerDay: 5,
 	showDaySummary: false,
@@ -191,6 +195,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.minHappiness !== undefined && state.player.happiness < c.minHappiness) return false;
 	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) return false;
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
+	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
 	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) return false;
@@ -430,6 +435,36 @@ export const useGameStore = create<GameState>((set, get) => ({
 			set({ currentVisitor: jesterVisitor });
 			return;
 		}
+
+		if (state.internHired && state.visitorsSeenToday.indexOf("intern_money") === -1) {
+			const internTexts = [
+				"My lord, I sold my rare minecraft account. Here is your cut!",
+				"My lord, I sold a rock. It was a cool rock.",
+				"My lord, I vibe coded a multi million dollar company. Here's your cut!",
+				"My lord, someone paid me to stop singing. I took the deal.",
+				"My lord, I found money on the ground. Finders keepers right?"
+			];
+			const internVisitor: Visitor = {
+				id: "intern_money",
+				name: "Intern",
+				sprite: "intern.png",
+				text: internTexts[Math.floor(Math.random() * internTexts.length)],
+				options: [
+					{
+						id: "intern_give",
+						text: "Awesome!",
+						effects: {
+							coins: 10
+						},
+						reaction: "No problem boss!",
+					},
+				],
+			};
+
+			set({ currentVisitor: internVisitor });
+			return;
+		}
+
 
 		if (state.scientistStep === 1 && Math.random() < 0.3) {
 			const ScientistVisitor: Visitor = {
@@ -709,6 +744,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let gameOver = prev.gameOver;
 			let gameOverReason = prev.gameOverReason;
 			let jesterHired = prev.jesterHired;
+			let internHired = prev.internHired;
 			let planets = prev.planets;
 			let banditContractActive = prev.banditContractActive;
 			let banditNextReportDay = prev.banditNextReportDay;
@@ -756,6 +792,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 			if (special === "jester_hired") {
 				jesterHired = true;
+			}
+
+			if (special === "intern_hired") {
+				internHired = true;
 			}
 
 			const baseReaction = option.reaction || "";
@@ -957,14 +997,14 @@ export const useGameStore = create<GameState>((set, get) => ({
 					visitorsSeenToday.push(currentVisitorId);
 				}
 
-				if (currentVisitorId !== "jester_entertainment" && currentVisitorId !== "war_general_report")
+				if (currentVisitorId !== "jester_entertainment" && currentVisitorId !== "intern_money" && currentVisitorId !== "war_general_report")
 					visitsToday += 1;
 
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
 
 				if (endOfDay) {
 					if (happiness >= 80) {
-						coins += ownedCount * 5;
+						coins += ownedCount * 15;
 					}
 
 					if (happiness < 20) {
@@ -1066,6 +1106,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				warPendingReport,
 				godDenied,
 				jesterHired,
+				internHired,
 				pendingDaySummary,
 			};
 		});
