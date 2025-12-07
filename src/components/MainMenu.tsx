@@ -3,9 +3,10 @@ import { useGameStore } from "../store/gameStore";
 
 interface MainMenuProps {
 	onStartGame: () => void;
+	onCredits: () => void;
 }
 
-export default function MainMenu({ onStartGame }: MainMenuProps) {
+export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 	const setPlayerInfo = useGameStore((state) => state.setPlayerInfo);
 
 	const [name, setName] = useState("");
@@ -74,7 +75,7 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
-								border: gender === "male" ? "2px solid #3b82f6" : "1px solid #334155",
+								border: "1px solid #334155",
 								backgroundColor: "#0b1120",
 								color: "white",
 								cursor: "pointer",
@@ -89,7 +90,7 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
-								border: gender === "female" ? "2px solid #ec4899" : "1px solid #334155",
+								border: "1px solid #334155",
 								backgroundColor: "#0b1120",
 								color: "white",
 								cursor: "pointer",
@@ -117,6 +118,23 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 				>
 					Play
 				</button>
+				<button
+					type="button"
+					onClick={() => onCredits()}
+					style={{
+						width: "100%",
+						padding: "8px 12px",
+						borderRadius: 4,
+						border: "1px solid #1e3a8a",
+						backgroundColor: "#2563eb",
+						color: "white",
+						cursor: "pointer",
+						marginTop: 8,
+					}}
+				>
+					Credits
+				</button>
+
 			</div>
 		</div>
 	);
