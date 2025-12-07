@@ -23,7 +23,6 @@ export default function CreditsPage({ onBack }: CreditsPageProps) {
 					border: "1px solid #1e3a8a",
 					backgroundColor: "#020f3a",
 					minWidth: 320,
-					boxShadow: "0 18px 45px rgba(0,0,0,0.6)",
 					textAlign: "center",
 				}}
 			>

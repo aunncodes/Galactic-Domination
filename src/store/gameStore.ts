@@ -28,6 +28,7 @@ export interface VisitorConditions {
 	internHired?: boolean;
 	refugeeBanned?: boolean;
 	bountyContractActive?: boolean;
+	warDiscountActive?: boolean;
 }
 
 export type SpecialEffect =
@@ -45,7 +46,8 @@ export type SpecialEffect =
 	| "science_chain_complete"
 	| "jester_hired"
 	| "intern_hired"
-	| "refugee_ban";
+	| "refugee_ban"
+	| "war_discount";
 
 export interface VisitorOptionEffects {
 	coins?: number;
@@ -106,6 +108,7 @@ interface GameState {
 	showDaySummary: boolean;
 	lastDaySummary: DaySummary | null;
 	dayStartCoins: number;
+	warDiscount: number;
 	dayStartHappiness: number;
 	dayStartRebellion: number;
 	bountyContractActive: boolean;
@@ -137,6 +140,7 @@ const initialState = {
 	day: 1,
 	currentVisitor: null,
 	taxRate: 0.15,
+	warDiscount: 1,
 	rebellionChance: 0,
 	jesterHired: false,
 	internHired: false,
@@ -187,6 +191,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
 	if (c.bountyContractActive !== undefined && c.bountyContractActive !== state.bountyContractActive) return false;
+	if (c.warDiscountActive !== undefined && c.warDiscountActive !== state.warDiscount > 0) return false;
 	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
@@ -609,9 +614,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, our planet ${ourPlanet.name} is being attacked by ${enemyPlanet.name}. We must decide our investment.`,
 					options: [
 						{
-							text: `Defend ${ourPlanet.name} (-${defendCost} coins)`,
+							text: `Defend ${ourPlanet.name} (-${defendCost * state.warDiscount} coins)`,
 							effects: {
-								coins: -defendCost,
+								coins: -defendCost * state.warDiscount,
 								special: "start_war_defend",
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
@@ -620,9 +625,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will do our best with the resources given.",
 						},
 						{
-							text: `Invest heavily in the defense (-${heavyDefendCost} coins)`,
+							text: `Invest heavily in the defense (-${heavyDefendCost * state.warDiscount} coins)`,
 							effects: {
-								coins: -heavyDefendCost,
+								coins: -heavyDefendCost * state.warDiscount,
 								special: "start_war_defend",
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
@@ -660,9 +665,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, for an investment of coins we can attack ${enemyPlanet.name}. How much shall we commit?`,
 					options: [
 						{
-							text: `Attack ${enemyPlanet.name} (-${attackCost} coins)`,
+							text: `Attack ${enemyPlanet.name} (-${attackCost * state.warDiscount} coins)`,
 							effects: {
-								coins: -attackCost,
+								coins: -attackCost * state.warDiscount,
 								special: "start_war_attack",
 								warEnemyPlanetId: enemyPlanet.id,
 								warInvestment: attackCost,
@@ -670,9 +675,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will create a solid force.",
 						},
 						{
-							text: `Launch a massive invasion (-${heavyAttackCost} coins)`,
+							text: `Launch a massive invasion (-${heavyAttackCost * state.warDiscount} coins)`,
 							effects: {
-								coins: -heavyAttackCost,
+								coins: -heavyAttackCost * state.warDiscount,
 								special: "start_war_attack",
 								warEnemyPlanetId: enemyPlanet.id,
 								warInvestment: heavyAttackCost,
@@ -742,6 +747,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let pendingDaySummary = prev.pendingDaySummary;
 			let godDenied = prev.godDenied;
 			let refugeeBanned = prev.refugeeBanned;
+			let warDiscount = prev.warDiscount;
 
 			const currentVisitorId = prev.currentVisitor?.id || null;
 			const effects = option.effects || {};
@@ -783,8 +789,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 				internHired = true;
 			}
 
-			if (special == "refugee_ban") {
+			if (special === "refugee_ban") {
 				refugeeBanned = true;
+			}
+
+			if (special === "war_discount") {
+				warDiscount = 0.85;
 			}
 
 			const baseReaction = option.reaction || "";
@@ -996,6 +1006,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				internHired,
 				refugeeBanned,
 				pendingDaySummary,
+				warDiscount,
 			};
 		});
 	},

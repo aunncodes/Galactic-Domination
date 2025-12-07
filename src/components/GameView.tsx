@@ -102,7 +102,6 @@ export default function GameView({ onGameOver }: GameViewProps) {
 							borderRadius: 16,
 							backgroundColor: "#020617",
 							border: "1px solid #1d4ed8",
-							boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
 						}}
 					>
 						<img

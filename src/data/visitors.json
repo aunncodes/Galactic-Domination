@@ -385,5 +385,33 @@
 				"reaction": "Sad! You’re making a big mistake, believe me!"
 			}
 		]
+	},
+	{
+		"id": "arms_dealer",
+		"name": "Arms Dealer",
+		"sprite": "arms_dealer.png",
+		"text": "Lord {user}! I have the finest weapons in the galaxy. For a small fee, I can give you a discount on all your future wars!",
+		"weight": 0.2,
+		"conditions": {
+			"warDiscountActive": false
+		},
+		"options": [
+			{
+				"text": "Sounds good to me. (-50 coins)",
+				"effects": {
+					"coins": -50,
+					"happiness": 5,
+					"special": "war_discount"
+				},
+				"reaction": "Excellent choice, my lord! Your future wars will be much more affordable!"
+			},
+			{
+				"text": "No thanks, I prefer to pay full price for my wars.",
+				"effects": {
+					"happiness": -2
+				},
+				"reaction": "Very well, my lord. Perhaps another time."
+			}
+		]
 	}
 ]

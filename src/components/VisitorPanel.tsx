@@ -76,7 +76,6 @@ export default function VisitorPanel() {
 				overflow: "hidden",
 				padding: "20px 40px",
 				boxSizing: "border-box",
-				boxShadow: "0 20px 50px rgba(0,0,0,0.7)",
 			}}
 		>
 			<motion.div
@@ -97,7 +96,6 @@ export default function VisitorPanel() {
 					backgroundColor: "#020617",
 					border: "1px solid #334155",
 					overflow: "hidden",
-					boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
 				}}
 			>
 				<img src={`characters/${visitor.sprite}`} alt={visitor.name} style={{ width: "100%", objectFit: "contain" }} />
@@ -113,7 +111,6 @@ export default function VisitorPanel() {
 					backgroundColor: "#020f3a",
 					borderRadius: 12,
 					border: "1px solid #1e3a8a",
-					boxShadow: "0 4px 18px rgba(0,0,0,0.8)",
 					fontSize: 15,
 				}}
 			>
@@ -146,7 +143,6 @@ export default function VisitorPanel() {
 
 						return (
 							<button
-								key={option.id}
 								onClick={() => handleOptionClick(option)}
 								disabled={notEnoughCoins || gameOver}
 								style={{

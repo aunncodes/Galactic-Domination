@@ -40,7 +40,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 					border: "1px solid #1e3a8a",
 					backgroundColor: "#020f3a",
 					maxWidth: 600,
-					boxShadow: "0 18px 45px rgba(0,0,0,0.6)",
 				}}
 			>
 				<h1 style={{ marginBottom: 16, textAlign: "center" }}>I Was Reincarnated as a Warlord Duck in Space and Now I’m Trying to Grow My Empire</h1>
@@ -69,29 +68,36 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 						<button
 							type="button"
 							onClick={() => setGender("male")}
+							aria-pressed={gender === "male"}
 							style={{
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
 								border: "1px solid #334155",
-								backgroundColor: "#0b1120",
+								backgroundColor: gender === "male" ? "#1e3a8a" : "#0b1120",
 								color: "white",
 								cursor: "pointer",
+								fontWeight: 400,
+								transition: "0.15s",
 							}}
 						>
 							Male
 						</button>
+
 						<button
 							type="button"
 							onClick={() => setGender("female")}
+							aria-pressed={gender === "female"}
 							style={{
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
 								border: "1px solid #334155",
-								backgroundColor: "#0b1120",
+								backgroundColor: gender === "female" ? "#831843" : "#0b1120",
 								color: "white",
 								cursor: "pointer",
+								fontWeight: 400,
+								transition: "0.15s",
 							}}
 						>
 							Female
