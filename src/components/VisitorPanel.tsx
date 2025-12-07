@@ -100,11 +100,7 @@ export default function VisitorPanel() {
 					boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
 				}}
 			>
-				<img
-					src={`characters/${visitor.sprite}`}
-					alt={visitor.name}
-					style={{ width: "100%", objectFit: "contain" }}
-				/>
+				<img src={`characters/${visitor.sprite}`} alt={visitor.name} style={{ width: "100%", objectFit: "contain" }} />
 			</motion.div>
 
 			<div

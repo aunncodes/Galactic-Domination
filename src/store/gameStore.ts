@@ -193,16 +193,8 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
 	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) return false;
 	if (c.maxRebellionChance !== undefined && state.rebellionChance > c.maxRebellionChance) return false;
-	if (
-		c.requiresOwnedPlanet !== undefined &&
-		!state.planets.some((p) => p.id === c.requiresOwnedPlanet && p.owned)
-	)
-		return false;
-	if (
-		c.requiresPlanetNotOwned !== undefined &&
-		state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned)
-	)
-		return false;
+	if (c.requiresOwnedPlanet !== undefined && !state.planets.some((p) => p.id === c.requiresOwnedPlanet && p.owned)) return false;
+	if (c.requiresPlanetNotOwned !== undefined && state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned)) return false;
 
 	return true;
 }
@@ -243,7 +235,7 @@ function resolveWar(params: {
 	const enemyRandom = Math.floor(Math.random() * 40);
 	const enemyInvestment = baseEnemy + enemyRandom;
 
-	let winChance = yourInvestment / (yourInvestment/1.5 + enemyInvestment);
+	let winChance = yourInvestment / (yourInvestment / 1.5 + enemyInvestment);
 
 	if (type === "defense") {
 		winChance += 0.15;
@@ -533,12 +525,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (
-			state.banditContractActive &&
-			state.banditNextReportDay !== null &&
-			state.day >= state.banditNextReportDay &&
-			state.visitsToday === 0
-		) {
+		if (state.banditContractActive && state.banditNextReportDay !== null && state.day >= state.banditNextReportDay && state.visitsToday === 0) {
 			const success = Math.random() < 0.6;
 
 			if (success) {
@@ -589,8 +576,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 								happiness: -10,
 								rebellionDelta: 15,
 							},
-							reaction:
-								"Then whatever they do next is on your head, overlord. Your people know you let the criminal walk.",
+							reaction: "Then whatever they do next is on your head, overlord. Your people know you let the criminal walk.",
 						},
 					],
 				};
@@ -682,11 +668,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			}
 		}
 
-		if (
-			state.player.coins >= 150 &&
-			Math.random() < 0.3 &&
-			state.visitorsSeenToday.indexOf("war_general") === -1
-		) {
+		if (state.player.coins >= 150 && Math.random() < 0.3 && state.visitorsSeenToday.indexOf("war_general") === -1) {
 			const enemyPlanet = getRandomUnownedPlanet(state.planets);
 			if (enemyPlanet) {
 				const attackCost = 80;
@@ -838,16 +820,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 					coins += 150;
 					happiness = Math.min(100, happiness + 10);
 					rebellionChance -= 5;
-					extraReactionParts.push(
-						"You are an eggstraordinary being. Your vaults are now filled to the brim."
-					);
+					extraReactionParts.push("You are an eggstraordinary being. Your vaults are now filled to the brim.");
 				} else {
 					coins = Math.max(0, coins - 75);
 					happiness = Math.max(0, happiness - 15);
 					rebellionChance += 5;
-					extraReactionParts.push(
-						"Your empire is slowly quacking apart. Your wealth and reputation are flying away."
-					);
+					extraReactionParts.push("Your empire is slowly quacking apart. Your wealth and reputation are flying away.");
 				}
 			}
 
@@ -856,8 +834,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				if (rebellionChance >= 30) {
 					prophecy = "Rebellion is coming. Try to make your citizens happy, or you will be overthrown.";
 				} else if (rebellionChance >= 20) {
-					prophecy =
-						"Ire blazes in the hearts of your ducks. The talons of rebellion may soon clutch your empire.";
+					prophecy = "Ire blazes in the hearts of your ducks. The talons of rebellion may soon clutch your empire.";
 				} else {
 					prophecy = "Your rule is stable. Your subjects are content under your reign.";
 				}
@@ -907,27 +884,22 @@ export const useGameStore = create<GameState>((set, get) => ({
 			if (special === "war_surrender" && effects.warOurPlanetId) {
 				planets = planets.map((p) => (p.id === effects.warOurPlanetId ? { ...p, owned: false } : p));
 				ownedCount = planets.filter((p) => p.owned).length;
-				extraReactionParts.push(
-					`You abandon ${planets.find((p) => p.id === effects.warOurPlanetId)?.name ?? "the world"}.`
-				);
+				extraReactionParts.push(`You abandon ${planets.find((p) => p.id === effects.warOurPlanetId)?.name ?? "the world"}.`);
 			}
 
 			if (coins === 0 && !gameOver) {
 				gameOver = true;
-				gameOverReason =
-					"Your treasury is empty. With no coins left, your empire collapses under debt and chaos.";
+				gameOverReason = "Your treasury is empty. With no coins left, your empire collapses under debt and chaos.";
 			}
 
 			if (ownedCount === 0 && !gameOver) {
 				gameOver = true;
-				gameOverReason =
-					"You have lost all your planets. With no worlds to call your own, your reign is at an end.";
+				gameOverReason = "You have lost all your planets. With no worlds to call your own, your reign is at an end.";
 			}
 
 			if (happiness === 0 && !gameOver) {
 				gameOver = true;
-				gameOverReason =
-					"Your subjects are utterly miserable. Revolts spread across every world and you are overthrown.";
+				gameOverReason = "Your subjects are utterly miserable. Revolts spread across every world and you are overthrown.";
 			}
 
 			if (ownedCount === planets.length && !gameOver) {
@@ -949,11 +921,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 					visitorsSeenToday.push(currentVisitorId);
 				}
 
-				if (
-					currentVisitorId !== "jester_entertainment" &&
-					currentVisitorId !== "intern_money" &&
-					currentVisitorId !== "tax_collector"
-				)
+				if (currentVisitorId !== "jester_entertainment" && currentVisitorId !== "intern_money" && currentVisitorId !== "tax_collector")
 					visitsToday += 1;
 
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
@@ -972,9 +940,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 							const lost = ownedPlanets[Math.floor(Math.random() * ownedCount)];
 							planets = planets.map((p) => (p.id === lost.id ? { ...p, owned: false } : p));
 							rebellionChance = 0;
-							extraReactionParts.push(
-								`Rebellion erupts on ${lost.name}. You lose 100 coins and control of the world.`
-							);
+							extraReactionParts.push(`Rebellion erupts on ${lost.name}. You lose 100 coins and control of the world.`);
 							const newExtra = extraReactionParts
 								.map((s) => s.trim())
 								.filter(Boolean)
@@ -1061,7 +1027,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 	acknowledgeDaySummary() {
 		const state = get();
 		if (state.gameOver) return;
-		set({ showDaySummary: false, pendingDaySummary: false, reactionText: null, currentVisitor: null });
+		set({
+			showDaySummary: false,
+			pendingDaySummary: false,
+			reactionText: null,
+			currentVisitor: null,
+		});
 		get().nextVisitor();
 	},
 

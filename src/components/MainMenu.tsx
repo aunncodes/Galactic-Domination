@@ -43,9 +43,7 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 					boxShadow: "0 18px 45px rgba(0,0,0,0.6)",
 				}}
 			>
-				<h1 style={{ marginBottom: 16, textAlign: "center" }}>
-					I Was Reincarnated as a Warlord Duck in Space and Now I’m Trying to Grow My Empire
-				</h1>
+				<h1 style={{ marginBottom: 16, textAlign: "center" }}>I Was Reincarnated as a Warlord Duck in Space and Now I’m Trying to Grow My Empire</h1>
 
 				<div style={{ marginBottom: 12 }}>
 					<label style={{ display: "block", marginBottom: 4 }}>Name</label>
