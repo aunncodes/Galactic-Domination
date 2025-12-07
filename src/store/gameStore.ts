@@ -384,10 +384,10 @@ export const useGameStore = create<GameState>((set, get) => ({
 				options: [
 					{
 						id: "acknowledge",
-						text: "Thank you so much!.",
+						text: "Thank you so much!",
 						reaction: "Anything for the greatest lord of all time!",
 						effects: {
-							coins: ownedCount * 15,
+							coins: ownedCount * 10,
 						},
 					},
 				],
@@ -531,7 +531,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			if (success) {
 				const resultVisitor: Visitor = {
 					id: "bounty_result_success",
-					name: "bounty Huntress",
+					name: "Bounty Huntress",
 					sprite: "bounty_huntress.png",
 					text: "Overlord, I have found the criminal and dealt with them. Your subjects are safer now.",
 					options: [
@@ -555,7 +555,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			} else {
 				const resultVisitor: Visitor = {
 					id: "bounty_result_fail",
-					name: "bounty Huntress",
+					name: "Bounty Huntress",
 					sprite: "bounty_huntress.png",
 					text: "I have not yet found the criminal, overlord. They are elusive. Shall I continue the hunt?",
 					options: [
@@ -589,15 +589,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.day % 5 === 0) {
+		if (state.day % 5 === 0 && state.visitorsSeenToday.indexOf("tax_collector") == -1) {
 			const taxCollector: Visitor = {
 				id: "tax_collector",
 				name: "Imperial Tax Collector",
 				sprite: "tax_collector.png",
 				text: "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
-				conditions: {
-					minCoins: 0,
-				},
 				options: [
 					{
 						id: "accept_taxes",
@@ -879,6 +876,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				happiness = result.happiness;
 				planets = result.planets;
 				extraReactionParts.push(result.resultText);
+				ownedCount = planets.filter((p) => p.owned).length;
 			}
 
 			if (special === "war_surrender" && effects.warOurPlanetId) {
@@ -927,10 +925,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
 
 				if (endOfDay) {
-					if (happiness < 20) {
-						rebellionChance = Math.min(100, rebellionChance + 5);
+					if (happiness < 10) {
+						rebellionChance = Math.min(100, rebellionChance + 3);
 					}
-
 					const rebellionThreshold = 30;
 					if (rebellionChance >= rebellionThreshold && !gameOver) {
 						const canLoseCoins = coins >= 100;

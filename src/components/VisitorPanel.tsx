@@ -69,7 +69,7 @@ export default function VisitorPanel() {
 		<div
 			style={{
 				position: "relative",
-				height: 450,
+				height: 550,
 				borderRadius: 16,
 				border: "1px solid #1d4ed8",
 				backgroundColor: "#020617",
