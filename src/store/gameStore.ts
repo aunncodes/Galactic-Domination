@@ -54,6 +54,7 @@ export interface VisitorOptionEffects {
 	special?: SpecialEffect;
 	warOurPlanetId?: string;
 	warEnemyPlanetId?: string;
+	warInvestment?: number;
 }
 
 export interface VisitorOption {
@@ -116,13 +117,6 @@ interface GameState {
 	chooseOption: (option: VisitorOption) => void;
 	acknowledgeDaySummary: () => void;
 	visitorsSeenToday: string[];
-	warActive: boolean;
-	warType: "attack" | "defense" | null;
-	warOurPlanetId: string | null;
-	warEnemyPlanetId: string | null;
-	warDaysElapsed: number;
-	warInvestment: number;
-	warPendingReport: string | null;
 	godDenied: boolean;
 	jesterHired: boolean;
 	internHired: boolean;
@@ -158,13 +152,6 @@ const initialState = {
 	gameOver: false,
 	gameOverReason: null,
 	visitorsSeenToday: [],
-	warActive: false,
-	warType: null,
-	warOurPlanetId: null,
-	warEnemyPlanetId: null,
-	warDaysElapsed: 0,
-	warInvestment: 0,
-	warPendingReport: null,
 	godDenied: false,
 	pendingDaySummary: false,
 };
@@ -230,61 +217,79 @@ function getRandomUnownedPlanet(planets: Planet[]): Planet | null {
 	return standardRand(unowned);
 }
 
-function createWarStatusVisitor(state: GameState): Visitor | null {
-	if (!state.warActive || !state.warEnemyPlanetId) return null;
+function resolveWar(params: {
+	type: "defense" | "attack";
+	yourInvestment: number;
+	enemyPlanetId?: string | null;
+	ourPlanetId?: string | null;
+	coins: number;
+	happiness: number;
+	planets: Planet[];
+}): {
+	coins: number;
+	happiness: number;
+	planets: Planet[];
+	resultText: string;
+} {
+	const { type, yourInvestment, enemyPlanetId, ourPlanetId } = params;
 
-	const enemy = state.planets.find((p) => p.id === state.warEnemyPlanetId);
-	const ours = state.warOurPlanetId ? state.planets.find((p) => p.id === state.warOurPlanetId) : undefined;
+	const baseEnemy = type === "defense" ? 50 : 60;
+	const enemyRandom = Math.floor(Math.random() * 80);
+	const enemyInvestment = baseEnemy + enemyRandom;
 
-	const warDailyCost = 40;
-	const advantage = state.warInvestment - state.warDaysElapsed * warDailyCost;
-	const winning = advantage >= 0;
-	let text: string;
+	let winChance = yourInvestment / (yourInvestment + enemyInvestment);
 
-	if (state.warType === "defense") {
-		if (winning) {
-			text = `Lord, we are winning the war at ${ours?.name ?? "our planet"}. We have the upper hand against ${enemy?.name}`;
+	if (type === "defense") {
+		winChance += 0.15;
+	}
+
+	if (type === "defense" && yourInvestment >= enemyInvestment) {
+		winChance = Math.max(winChance, 0.85);
+	}
+
+	winChance = Math.max(0.05, Math.min(0.95, winChance));
+
+	const roll = Math.random();
+	const youWin = roll < winChance;
+
+	const newCoins = params.coins;
+	let newHappiness: number;
+	let newPlanets = params.planets;
+	let resultText: string;
+
+	if (youWin) {
+		if (type === "defense") {
+			resultText = "Your forces prevail and the planet is successfully defended.";
+			newHappiness = Math.min(100, params.happiness + 5);
 		} else {
-			text = `Lord, we are struggling to defend ${ours?.name ?? "our planet"}. We need more coins to stop ${enemy?.name}.`;
+			if (enemyPlanetId) {
+				newPlanets = params.planets.map((p) => (p.id === enemyPlanetId ? { ...p, owned: true } : p));
+				resultText = "Your army conquers the enemy world and adds it to your empire.";
+			} else {
+				resultText = "Your attack is successful.";
+			}
+			newHappiness = Math.min(100, params.happiness + 5);
 		}
 	} else {
-		if (winning) {
-			text = `Lord, we are close to defeating ${enemy?.name}.`;
+		if (type === "defense") {
+			if (ourPlanetId) {
+				newPlanets = params.planets.map((p) => (p.id === ourPlanetId ? { ...p, owned: false } : p));
+				resultText = "Despite your efforts, the enemy overwhelms your defenses and the planet is lost.";
+			} else {
+				resultText = "Your forces are defeated and you lose the battle.";
+			}
+			newHappiness = Math.max(0, params.happiness - 10);
 		} else {
-			text = `Lord, the defense at ${enemy?.name} is too strong. We must invest more coins to turn the tide.`;
+			resultText = "The campaign fails and your forces are driven back.";
+			newHappiness = Math.max(0, params.happiness - 5);
 		}
 	}
 
 	return {
-		id: "war_general_status",
-		name: "War General",
-		sprite: "war_general.png",
-		text: text,
-		options: [
-			{
-				id: "war_invest_more",
-				text: `Commit ${warDailyCost} more coins to the war.`,
-				effects: {
-					coins: -warDailyCost,
-					special: "war_invest_more",
-				},
-				reaction: "Thank you. Reinforcements and supplies are on the way.",
-			},
-			{
-				id: "war_hold_or_surrender",
-				text:
-					state.warType === "defense"
-						? "We cannot spare more. Hold if you can."
-						: "I cannot. Call off the campaign.",
-				effects: {
-					special: "war_surrender",
-				},
-				reaction:
-					state.warType === "defense"
-						? "Alright, but I warn you this will likely not go well."
-						: "Very well, we will retreat.",
-			},
-		],
+		coins: newCoins,
+		happiness: newHappiness,
+		planets: newPlanets,
+		resultText,
 	};
 }
 
@@ -369,27 +374,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				],
 			};
 			set({ currentVisitor: royalAdvisor });
-			return;
-		}
-
-		if (state.warPendingReport) {
-			const reportVisitor: Visitor = {
-				id: "war_general_report",
-				name: "War General",
-				sprite: "war_general.png",
-				text: state.warPendingReport,
-				options: [
-					{
-						id: "war_report_acknowledge",
-						text: "Understood.",
-						reaction: "I will return to the barracks.",
-					},
-				],
-			};
-			set({
-				currentVisitor: reportVisitor,
-				warPendingReport: null,
-			});
 			return;
 		}
 
@@ -522,14 +506,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.warActive && state.visitsToday === 0) {
-			const warVisitor = createWarStatusVisitor(state);
-			if (warVisitor) {
-				set({ currentVisitor: warVisitor });
-				return;
-			}
-		}
-
 		if (
 			state.banditContractActive &&
 			state.banditNextReportDay !== null &&
@@ -608,7 +584,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			const taxCollector: Visitor = {
 				id: "tax_collector",
 				name: "Imperial Tax Collector",
-				sprite: "tax_officer.png",
+				sprite: "tax_collector.png",
 				text: "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
 				conditions: {
 					minCoins: 0,
@@ -628,27 +604,42 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (!state.warActive && Math.random() < 0.1 && state.day !== 1) {
+		if (Math.random() < 0.1 && state.day > 3 && state.visitorsSeenToday.indexOf("war_general") === -1) {
 			const ourPlanet = getRandomOwnedPlanet(state.planets);
 			const enemyPlanet = getRandomUnownedPlanet(state.planets);
 			if (ourPlanet && enemyPlanet) {
 				const defendCost = 60;
+				const heavyDefendCost = 110;
+
 				const warOfferVisitor: Visitor = {
-					id: "war_general_defend_offer",
+					id: "war_general",
 					name: "War General",
 					sprite: "war_general.png",
-					text: `Lord, our planet ${ourPlanet.name} is being attacked by ${enemyPlanet.name}. We must defend for ${defendCost} coins or we will lose it.`,
+					text: `Lord, our planet ${ourPlanet.name} is being attacked by ${enemyPlanet.name}. We must decide our investment.`,
 					options: [
 						{
-							id: "defend_planet",
+							id: "defend_planet_normal",
 							text: `Defend ${ourPlanet.name} (-${defendCost} coins)`,
 							effects: {
 								coins: -defendCost,
 								special: "start_war_defend",
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
+								warInvestment: defendCost,
 							},
-							reaction: "We will do our best.",
+							reaction: "We will do our best with the resources given.",
+						},
+						{
+							id: "defend_planet_heavy",
+							text: `Invest heavily in the defense (-${heavyDefendCost} coins)`,
+							effects: {
+								coins: -heavyDefendCost,
+								special: "start_war_defend",
+								warOurPlanetId: ourPlanet.id,
+								warEnemyPlanetId: enemyPlanet.id,
+								warInvestment: heavyDefendCost,
+							},
+							reaction: "We will throw everything we have at the enemy.",
 						},
 						{
 							id: "abandon_planet",
@@ -658,7 +649,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
 							},
-							reaction: `Very well, ${ourPlanet.name} will fall.`,
+							reaction: `${ourPlanet.name} will fall without resistance.`,
 						},
 					],
 				};
@@ -668,30 +659,48 @@ export const useGameStore = create<GameState>((set, get) => ({
 			}
 		}
 
-		if (!state.warActive && state.player.coins >= 200 && Math.random() < 0.3) {
+		if (
+			state.player.coins >= 200 &&
+			Math.random() < 0.3 &&
+			state.visitorsSeenToday.indexOf("war_general") === -1
+		) {
 			const enemyPlanet = getRandomUnownedPlanet(state.planets);
 			if (enemyPlanet) {
 				const attackCost = 80;
+				const heavyAttackCost = 140;
+
 				const warAttackVisitor: Visitor = {
-					id: "war_general_attack_offer",
+					id: "war_general",
 					name: "War General",
 					sprite: "war_general.png",
-					text: `Lord, for ${attackCost} coins we can attack ${enemyPlanet.name}.`,
+					text: `Lord, for an investment of coins we can attack ${enemyPlanet.name}. How much shall we commit?`,
 					options: [
 						{
-							id: "start_attack",
-							text: `Alright, attack ${enemyPlanet.name} (-${attackCost} coins)`,
+							id: "start_attack_normal",
+							text: `Attack ${enemyPlanet.name} (-${attackCost} coins)`,
 							effects: {
 								coins: -attackCost,
 								special: "start_war_attack",
 								warEnemyPlanetId: enemyPlanet.id,
+								warInvestment: attackCost,
 							},
-							reaction: "We will attack at the quack of dawn.",
+							reaction: "We will create a solid force.",
+						},
+						{
+							id: "start_attack_heavy",
+							text: `Launch a massive invasion (-${heavyAttackCost} coins)`,
+							effects: {
+								coins: -heavyAttackCost,
+								special: "start_war_attack",
+								warEnemyPlanetId: enemyPlanet.id,
+								warInvestment: heavyAttackCost,
+							},
+							reaction: "We will overwhelm them with sheer power.",
 						},
 						{
 							id: "decline_attack",
 							text: "Not now.",
-							reaction: "Alright. The military will remain on standby.",
+							reaction: "Very well. The army will remain on standby.",
 						},
 					],
 				};
@@ -750,13 +759,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let banditContractActive = prev.banditContractActive;
 			let banditNextReportDay = prev.banditNextReportDay;
 			let pendingDaySummary = prev.pendingDaySummary;
-			let warActive = prev.warActive;
-			let warType = prev.warType;
-			let warOurPlanetId = prev.warOurPlanetId;
-			let warEnemyPlanetId = prev.warEnemyPlanetId;
-			let warDaysElapsed = prev.warDaysElapsed;
-			let warInvestment = prev.warInvestment;
-			let warPendingReport = prev.warPendingReport;
 			let godDenied = prev.godDenied;
 
 			const currentVisitorId = prev.currentVisitor?.id || null;
@@ -853,112 +855,32 @@ export const useGameStore = create<GameState>((set, get) => ({
 				extraReactionParts.push(`Your ledgers swell by ${taxIncome} coins from your subjects' labor.`);
 			}
 
-			if (special === "start_war_defend") {
-				warActive = true;
-				warType = "defense";
-				warOurPlanetId = effects.warOurPlanetId ?? null;
-				warEnemyPlanetId = effects.warEnemyPlanetId ?? null;
-				warDaysElapsed = 0;
-				const investNow = -(effects.coins ?? 0);
-				if (investNow > 0) {
-					warInvestment = investNow;
-				} else {
-					warInvestment = 0;
-				}
+			if (special === "start_war_defend" || special === "start_war_attack") {
+				const type = special === "start_war_defend" ? "defense" : "attack";
+
+				const yourInvestment = effects.warInvestment ?? -(effects.coins ?? 0);
+
+				const result = resolveWar({
+					type,
+					yourInvestment,
+					enemyPlanetId: effects.warEnemyPlanetId ?? null,
+					ourPlanetId: effects.warOurPlanetId ?? null,
+					coins,
+					happiness,
+					planets,
+				});
+
+				coins = result.coins;
+				happiness = result.happiness;
+				planets = result.planets;
+				extraReactionParts.push(result.resultText);
 			}
 
-			if (special === "start_war_attack") {
-				warActive = true;
-				warType = "attack";
-				warOurPlanetId = null;
-				warEnemyPlanetId = effects.warEnemyPlanetId ?? null;
-				warDaysElapsed = 0;
-				const investNow = -(effects.coins ?? 0);
-				if (investNow > 0) {
-					warInvestment = investNow;
-				} else {
-					warInvestment = 0;
-				}
-			}
-
-			if (special === "war_invest_more") {
-				const investMore = -(effects.coins ?? 0);
-				if (investMore > 0) {
-					warInvestment = prev.warInvestment + investMore;
-				}
-				warDaysElapsed = prev.warDaysElapsed + 1;
-			}
-
-			if (special === "war_surrender") {
-				if (!prev.warActive && effects.warOurPlanetId) {
-					planets = planets.map((p) => (p.id === effects.warOurPlanetId ? { ...p, owned: false } : p));
-					warPendingReport = "We abandon the world. The enemy occupies it completely.";
-				}
-
-				if (prev.warActive) {
-					if (prev.warType === "defense" && prev.warOurPlanetId) {
-						planets = planets.map((p) => (p.id === prev.warOurPlanetId ? { ...p, owned: false } : p));
-						warPendingReport = "Our defending world is lost to the enemy.";
-					} else if (prev.warType === "attack" && prev.warEnemyPlanetId) {
-						warPendingReport = "We retreat. The enemy planet remains unconquered.";
-					}
-				}
-
-				warActive = false;
-				warType = null;
-				warOurPlanetId = null;
-				warEnemyPlanetId = null;
-				warDaysElapsed = 0;
-				warInvestment = 0;
-			}
-
-			if (warActive) {
-				const maxWarDays = 3;
-
-				if (special !== "war_invest_more") {
-					warDaysElapsed = prev.warDaysElapsed + 1;
-				}
-
-				if (coins === 0) {
-					if (warType === "defense" && warOurPlanetId) {
-						planets = planets.map((p) => (p.id === warOurPlanetId ? { ...p, owned: false } : p));
-						warPendingReport = "Without coins, we fail to defend and lose the planet.";
-					} else if (warType === "attack" && warEnemyPlanetId) {
-						warPendingReport = "Without money, we failed to seize the enemy world.";
-					}
-					warActive = false;
-					warType = null;
-					warOurPlanetId = null;
-					warEnemyPlanetId = null;
-					warDaysElapsed = 0;
-					warInvestment = 0;
-				} else if (warDaysElapsed >= maxWarDays) {
-					const strength = warInvestment + Math.random() * 60;
-					const difficulty = 80;
-
-					if (strength >= difficulty) {
-						if (warType === "defense") {
-							warPendingReport = "The enemy retreated and we protected the planet.";
-						} else if (warType === "attack" && warEnemyPlanetId) {
-							planets = planets.map((p) => (p.id === warEnemyPlanetId ? { ...p, owned: true } : p));
-							warPendingReport = "Victory. The enemy planet falls and joins your empire.";
-						}
-					} else {
-						if (warType === "defense" && warOurPlanetId) {
-							planets = planets.map((p) => (p.id === warOurPlanetId ? { ...p, owned: false } : p));
-							warPendingReport = "We are overwhelmed. The defending world is lost.";
-						} else if (warType === "attack") {
-							warPendingReport = "The campaign fails and the enemy lives.";
-						}
-					}
-
-					warActive = false;
-					warType = null;
-					warOurPlanetId = null;
-					warEnemyPlanetId = null;
-					warDaysElapsed = 0;
-					warInvestment = 0;
-				}
+			if (special === "war_surrender" && effects.warOurPlanetId) {
+				planets = planets.map((p) => (p.id === effects.warOurPlanetId ? { ...p, owned: false } : p));
+				extraReactionParts.push(
+					`You abandon ${planets.find((p) => p.id === effects.warOurPlanetId)?.name ?? "the world"}.`
+				);
 			}
 
 			if (coins === 0 && !gameOver) {
@@ -1102,13 +1024,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				gameOver,
 				gameOverReason,
 				visitorsSeenToday,
-				warActive,
-				warType,
-				warOurPlanetId,
-				warEnemyPlanetId,
-				warDaysElapsed,
-				warInvestment,
-				warPendingReport,
 				godDenied,
 				jesterHired,
 				internHired,

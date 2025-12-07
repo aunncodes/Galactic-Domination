@@ -333,10 +333,10 @@
 		"options": [
 			{
 				"id": "hire_intern",
-				"text": "Alright, you seem eager enough. You're hired! (-100 coins)",
+				"text": "Alright, you seem eager enough. You're hired! (-75 coins)",
 				"effects": {
 					"happiness": 5,
-					"coins": -100,
+					"coins": -75,
 					"special": "intern_hired"
 				},
 				"reaction": "Thank you, my lord! I won't let you down!"
