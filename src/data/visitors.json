@@ -190,7 +190,7 @@
 			},
 			{
 				"id": "turn_them_away",
-				"text": "Go away! They can duck and cover wherever else they wish.",
+				"text": "Go away! You can duck and cover wherever else you wish.",
 				"effects": {
 					"happiness": -10,
 					"rebellionDelta": 5
