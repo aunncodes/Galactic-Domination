@@ -60,15 +60,17 @@ export default function GameView({ onGameOver }: GameViewProps) {
 					fontSize: 14,
 				}}
 			>
-		  <div>Day: {day}</div>
+				<div>Day: {day}</div>
 
-		  <Stat label="Coins" value={coins} />
+				<Stat label="Coins" value={coins} />
 
-		  <Stat label="Happiness" value={happiness} />
+				<Stat label="Happiness" value={happiness} />
 
-		  <div>Planets: {ownedPlanetsCount()}/{totalPlanets}</div>
+				<div>
+					Planets: {ownedPlanetsCount()}/{totalPlanets}
+				</div>
 
-		  <Stat label="Tax rate" value={taxPercent} suffix="%" />
+				<Stat label="Tax rate" value={taxPercent} suffix="%" />
 			</div>
 
 			<div
@@ -103,17 +105,15 @@ export default function GameView({ onGameOver }: GameViewProps) {
 							boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
 						}}
 					>
-					<img
-						src={gender === "female"
-							? "characters/thronefemale.png"
-							: "characters/thronemale.png"}
-						alt="Overlord on throne"
-						style={{
-							maxWidth: "100%",
-							maxHeight: "100%",
-							objectFit: "contain",
-						}}
-					/>
+						<img
+							src={gender === "female" ? "characters/thronefemale.png" : "characters/thronemale.png"}
+							alt="Overlord on throne"
+							style={{
+								maxWidth: "100%",
+								maxHeight: "100%",
+								objectFit: "contain",
+							}}
+						/>
 					</div>
 				</div>
 

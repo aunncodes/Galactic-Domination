@@ -18,8 +18,7 @@ function App() {
 				audioRef.current.loop = true;
 				audioRef.current.volume = 0.1;
 
-				audioRef.current.play().catch(() => {
-				});
+				audioRef.current.play().catch(() => {});
 			}
 		}
 	}, [screen]);
@@ -32,10 +31,7 @@ function App() {
 		return (
 			<>
 				<audio ref={audioRef} src="menu.wav" />
-				<MainMenu
-					onStartGame={() => setScreen("game")}
-					onCredits={() => setScreen("credits")}
-				/>
+				<MainMenu onStartGame={() => setScreen("game")} onCredits={() => setScreen("credits")} />
 			</>
 		);
 	}

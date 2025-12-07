@@ -29,40 +29,20 @@ export default function CreditsPage({ onBack }: CreditsPageProps) {
 			>
 				<h1 style={{ marginBottom: 16 }}>Credits</h1>
 
-				<p style={{ opacity: 0.8, marginBottom: -10 }}>
-					Programmed by
-				</p>
-				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
-					Aunn
-				</p>
+				<p style={{ opacity: 0.8, marginBottom: -10 }}>Programmed by</p>
+				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>Aunn</p>
 
-				<p style={{ opacity: 0.8, marginBottom: -10 }}>
-					Art
-				</p>
-				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
-					Clod
-				</p>
+				<p style={{ opacity: 0.8, marginBottom: -10 }}>Art</p>
+				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>Clod</p>
 
-                <p style={{ opacity: 0.8, marginBottom: -10 }}>
-					Play Testing
-				</p>
-				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
-					Aeshgetem
-				</p>
+				<p style={{ opacity: 0.8, marginBottom: -10 }}>Play Testing</p>
+				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>Aeshgetem</p>
 
-				<p style={{ opacity: 0.8, marginBottom: -10 }}>
-					Music
-				</p>
-				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>
-					SubspaceAudio
-				</p>
+				<p style={{ opacity: 0.8, marginBottom: -10 }}>Music</p>
+				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 16 }}>SubspaceAudio</p>
 
-				<p style={{ opacity: 0.8, marginBottom: -10 }}>
-					Moral Support
-				</p>
-				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>
-					CaptainTomato
-				</p>
+				<p style={{ opacity: 0.8, marginBottom: -10 }}>Moral Support</p>
+				<p style={{ fontSize: 20, fontWeight: 700, marginBottom: 20 }}>CaptainTomato</p>
 
 				<button
 					type="button"

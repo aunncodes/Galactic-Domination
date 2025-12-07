@@ -134,7 +134,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 				>
 					Credits
 				</button>
-
 			</div>
 		</div>
 	);

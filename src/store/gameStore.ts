@@ -442,7 +442,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 				"My lord, I sold a rock. It was a cool rock.",
 				"My lord, I vibe coded a multi million dollar company. Here's your cut!",
 				"My lord, someone paid me to stop singing. I took the deal.",
-				"My lord, I found money on the ground. Finders keepers right?"
+				"My lord, I found money on the ground. Finders keepers right?",
+				"Hey, I found a really heavy sock. You can have what's in it.",
+				"Waiter asked for a tip, I gave him -10 dollars. Here's your share!",
 			];
 			const internVisitor: Visitor = {
 				id: "intern_money",
@@ -454,7 +456,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 						id: "intern_give",
 						text: "Awesome!",
 						effects: {
-							coins: 10
+							coins: 10,
 						},
 						reaction: "No problem boss!",
 					},
@@ -464,7 +466,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			set({ currentVisitor: internVisitor });
 			return;
 		}
-
 
 		if (state.scientistStep === 1 && Math.random() < 0.3) {
 			const ScientistVisitor: Visitor = {
@@ -997,7 +998,11 @@ export const useGameStore = create<GameState>((set, get) => ({
 					visitorsSeenToday.push(currentVisitorId);
 				}
 
-				if (currentVisitorId !== "jester_entertainment" && currentVisitorId !== "intern_money" && currentVisitorId !== "war_general_report")
+				if (
+					currentVisitorId !== "jester_entertainment" &&
+					currentVisitorId !== "intern_money" &&
+					currentVisitorId !== "war_general_report"
+				)
 					visitsToday += 1;
 
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
@@ -1126,5 +1131,5 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 	resetGame() {
 		set({ ...initialState });
-	}
+	},
 }));
