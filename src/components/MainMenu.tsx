@@ -27,7 +27,7 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 				display: "flex",
 				alignItems: "center",
 				justifyContent: "center",
-				backgroundColor: "#050508",
+				backgroundColor: "#020617",
 				color: "white",
 				fontFamily: "system-ui, sans-serif",
 			}}
@@ -36,12 +36,15 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 				style={{
 					padding: 24,
 					borderRadius: 12,
-					border: "1px solid #444",
-					background: "radial-gradient(circle at top, rgba(80,80,80,0.5) 0, rgba(0,0,0,0.95) 60%)",
+					border: "1px solid #1e3a8a",
+					backgroundColor: "#020f3a",
 					minWidth: 320,
+					boxShadow: "0 18px 45px rgba(0,0,0,0.6)",
 				}}
 			>
-				<h1 style={{ marginBottom: 16 }}>Galactic Domination</h1>
+				<h1 style={{ marginBottom: 16, textAlign: "center" }}>
+					I Was Reincarnated as a Warlord Duck in Space and Now I’m Trying to Grow My Empire
+				</h1>
 
 				<div style={{ marginBottom: 12 }}>
 					<label style={{ display: "block", marginBottom: 4 }}>Name</label>
@@ -53,9 +56,10 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 							width: "100%",
 							padding: "6px 8px",
 							borderRadius: 4,
-							border: "1px solid #555",
-							backgroundColor: "#111",
+							border: "1px solid #334155",
+							backgroundColor: "#020617",
 							color: "white",
+							outline: "none",
 						}}
 					/>
 				</div>
@@ -70,8 +74,8 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
-								border: gender === "male" ? "2px solid #fff" : "1px solid #555",
-								backgroundColor: "#222",
+								border: gender === "male" ? "2px solid #3b82f6" : "1px solid #334155",
+								backgroundColor: "#0b1120",
 								color: "white",
 								cursor: "pointer",
 							}}
@@ -85,8 +89,8 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 								flex: 1,
 								padding: "6px 8px",
 								borderRadius: 4,
-								border: gender === "female" ? "2px solid #fff" : "1px solid #555",
-								backgroundColor: "#222",
+								border: gender === "female" ? "2px solid #ec4899" : "1px solid #334155",
+								backgroundColor: "#0b1120",
 								color: "white",
 								cursor: "pointer",
 							}}
@@ -104,8 +108,8 @@ export default function MainMenu({ onStartGame }: MainMenuProps) {
 						width: "100%",
 						padding: "8px 12px",
 						borderRadius: 4,
-						border: "1px solid #777",
-						backgroundColor: canStart ? "#2b7a2b" : "#333",
+						border: "1px solid #1e3a8a",
+						backgroundColor: canStart ? "#2563eb" : "#1f2937",
 						color: "white",
 						cursor: canStart ? "pointer" : "not-allowed",
 						fontWeight: 600,

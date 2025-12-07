@@ -24,6 +24,7 @@ export interface VisitorConditions {
 	maxRebellionChance?: number;
 	godDenied?: boolean;
 	scienceStep?: number;
+	jesterHired?: boolean;
 }
 
 export type SpecialEffect =
@@ -88,39 +89,28 @@ interface GameState {
 	player: Player;
 	planets: Planet[];
 	setPlayerInfo: (name: string, gender: "male" | "female") => void;
-
 	day: number;
 	currentVisitor: Visitor | null;
-
 	taxRate: number;
 	rebellionChance: number;
-
 	visitsToday: number;
 	maxVisitorsPerDay: number;
-
 	scientistStep: number;
-
 	showDaySummary: boolean;
 	lastDaySummary: DaySummary | null;
 	dayStartCoins: number;
 	dayStartHappiness: number;
 	dayStartRebellion: number;
-
 	banditContractActive: boolean;
 	banditNextReportDay: number | null;
-
 	reactionText: string | null;
-
 	gameOver: boolean;
 	gameOverReason: string | null;
-
 	ownedPlanetsCount: () => number;
 	nextVisitor: () => void;
 	chooseOption: (option: VisitorOption) => void;
 	acknowledgeDaySummary: () => void;
-
 	visitorsSeenToday: string[];
-
 	warActive: boolean;
 	warType: "attack" | "defense" | null;
 	warOurPlanetId: string | null;
@@ -130,6 +120,7 @@ interface GameState {
 	warPendingReport: string | null;
 	godDenied: boolean;
 	jesterHired: boolean;
+	pendingDaySummary: boolean;
 }
 
 const planets: Planet[] = planetsData as Planet[];
@@ -156,37 +147,25 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 
 	if (c.minCoins !== undefined && state.player.coins < c.minCoins) return false;
 	if (c.maxCoins !== undefined && state.player.coins > c.maxCoins) return false;
-
 	if (c.godDenied !== undefined && c.godDenied !== state.godDenied) return false;
-
 	if (c.scienceStep !== undefined && c.scienceStep !== state.scientistStep) return false;
-
-	if (c.minHappiness !== undefined && state.player.happiness < c.minHappiness) {
-		return false;
-	}
-	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) {
-		return false;
-	}
-
+	if (c.minHappiness !== undefined && state.player.happiness < c.minHappiness) return false;
+	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) return false;
+	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
-
-	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) {
+	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) return false;
+	if (c.maxRebellionChance !== undefined && state.rebellionChance > c.maxRebellionChance) return false;
+	if (
+		c.requiresOwnedPlanet !== undefined &&
+		!state.planets.some((p) => p.id === c.requiresOwnedPlanet && p.owned)
+	)
 		return false;
-	}
-	if (c.maxRebellionChance !== undefined && state.rebellionChance > c.maxRebellionChance) {
+	if (
+		c.requiresPlanetNotOwned !== undefined &&
+		state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned)
+	)
 		return false;
-	}
-
-	if (c.requiresOwnedPlanet) {
-		const hasPlanet = state.planets.some((p) => p.id === c.requiresOwnedPlanet && p.owned);
-		if (!hasPlanet) return false;
-	}
-
-	if (c.requiresPlanetNotOwned) {
-		const hasPlanet = state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned);
-		if (hasPlanet) return false;
-	}
 
 	return true;
 }
@@ -288,33 +267,23 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 	day: 1,
 	currentVisitor: null,
-
 	taxRate: 0.15,
 	rebellionChance: 0,
-
 	jesterHired: false,
-
 	visitsToday: 0,
-	maxVisitorsPerDay: 3,
-
+	maxVisitorsPerDay: 5,
 	showDaySummary: false,
 	lastDaySummary: null,
 	dayStartCoins: 100,
 	dayStartHappiness: 50,
 	dayStartRebellion: 0,
-
 	banditContractActive: false,
 	banditNextReportDay: null,
-
 	scientistStep: 0,
-
 	reactionText: null,
-
 	gameOver: false,
 	gameOverReason: null,
-
 	visitorsSeenToday: [],
-
 	warActive: false,
 	warType: null,
 	warOurPlanetId: null,
@@ -322,8 +291,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 	warDaysElapsed: 0,
 	warInvestment: 0,
 	warPendingReport: null,
-
 	godDenied: false,
+	pendingDaySummary: false,
 
 	ownedPlanetsCount() {
 		return get().planets.filter((p) => p.owned).length;
@@ -334,8 +303,19 @@ export const useGameStore = create<GameState>((set, get) => ({
 			console.log(JSON.stringify(useGameStore.getState(), null, 2));
 			console.log("Loaded visitors:", visitors);
 		}
+
 		const state = get();
 		if (state.gameOver || state.showDaySummary) return;
+
+		if (state.pendingDaySummary) {
+			set({
+				showDaySummary: true,
+				pendingDaySummary: false,
+				currentVisitor: null,
+				reactionText: null,
+			});
+			return;
+		}
 
 		const ownedCount = state.ownedPlanetsCount();
 
@@ -344,6 +324,46 @@ export const useGameStore = create<GameState>((set, get) => ({
 		}
 
 		set({ reactionText: null });
+
+		if (state.visitsToday == 0 && state.day == 1) {
+			const royalAdvisor: Visitor = {
+				id: "royal_advisor_intro",
+				name: "Royal Advisor",
+				sprite: "royal_advisor.png",
+				text: "Welcome, {user}, to your new role as the ruler of this fledgling space empire. Your journey to galactic domination begins now. May your reign be prosperous and your enemies quack in fear!",
+				options: [
+					{
+						id: "royal_advisor_acknowledge",
+						text: "I am ready to lead.",
+						reaction: "Excellent! Let me teach you how to play.",
+					},
+				],
+			};
+			set({ currentVisitor: royalAdvisor });
+			return;
+		}
+		if (state.visitsToday == 1 && state.day == 1) {
+			const royalAdvisor: Visitor = {
+				id: "royal_advisor_intro",
+				name: "Royal Advisor",
+				sprite: "royal_advisor.png",
+				text: "To play, you must pick one of the options each visitor gives you. Manage your coins and happiness to avoid rebellion. Expand your empire by acquiring planets, and defend them from enemies. Good luck, {user}!",
+				options: [
+					{
+						id: "royal_advisor_acknowledge",
+						text: "Alright!",
+						reaction: "I wish you luck in your journey!",
+					},
+					{
+						id: "royal_advisor_more_tutorial",
+						text: "Awesome!",
+						reaction: "I wish you luck in your journey!",
+					},
+				],
+			};
+			set({ currentVisitor: royalAdvisor });
+			return;
+		}
 
 		if (state.warPendingReport) {
 			const reportVisitor: Visitor = {
@@ -407,7 +427,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			};
 			set({ currentVisitor: jesterVisitor });
 			return;
-
 		}
 
 		if (state.scientistStep === 1 && Math.random() < 0.3) {
@@ -548,11 +567,27 @@ export const useGameStore = create<GameState>((set, get) => ({
 		}
 
 		if (state.day % 5 === 0 && state.visitsToday === 0 && ownedCount > 0) {
-			const taxCollector = visitors.find((v) => v.id === "tax_collector");
-			if (taxCollector) {
-				set({ currentVisitor: taxCollector });
-				return;
-			}
+			const taxCollector: Visitor = {
+				id: "tax_collector",
+				name: "Imperial Tax Collector",
+				sprite: "tax_officer.png",
+				text: "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
+				conditions: {
+					minCoins: 0,
+				},
+				options: [
+					{
+						id: "accept_taxes",
+						text: "Good job.",
+						effects: {
+							special: "tax_collector",
+						},
+						reaction: "I thank my liege for showing such kindness to a featherbrained individual like me.",
+					},
+				],
+			};
+			set({ currentVisitor: taxCollector });
+			return;
 		}
 
 		if (!state.warActive && Math.random() < 0.1 && state.day !== 1) {
@@ -629,9 +664,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 		}
 
 		const available = visitors.filter((v) => {
-			if (v.id === "tax_collector") {
-				return false;
-			}
 			if (!visitorMatchesConditions(v, state)) {
 				return false;
 			}
@@ -661,43 +693,24 @@ export const useGameStore = create<GameState>((set, get) => ({
 		}
 
 		set((prev) => {
-			const currentVisitorId = prev.currentVisitor?.id || null;
-
-			const effects = option.effects || {};
-			const special = effects.special;
-
-			let coins = prev.player.coins + (effects.coins ?? 0);
-			let happiness = prev.player.happiness + (effects.happiness ?? 0);
-			let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
-			let rebellionChance = prev.rebellionChance + (effects.rebellionDelta ?? 0);
-
+			let day = prev.day;
+			let visitsToday = prev.visitsToday;
+			const showDaySummary = prev.showDaySummary;
+			let lastDaySummary = prev.lastDaySummary;
+			let dayStartCoins = prev.dayStartCoins;
+			let dayStartHappiness = prev.dayStartHappiness;
+			let dayStartRebellion = prev.dayStartRebellion;
 			let scientistStep = prev.scientistStep;
-
 			let visitorsSeenToday = [...prev.visitorsSeenToday];
-
-			coins = Math.max(0, coins);
-			happiness = Math.max(0, happiness);
-			taxRate = Math.max(0, Math.min(0.5, taxRate));
-			rebellionChance = Math.max(0, Math.min(100, rebellionChance));
-
-			let planets = prev.planets;
-			if (effects.addPlanetId) {
-				planets = prev.planets.map((p) => (p.id === effects.addPlanetId ? { ...p, owned: true } : p));
-			}
 			const name = prev.player.name;
 			const gender = prev.player.gender;
-
 			let gameOver = prev.gameOver;
 			let gameOverReason = prev.gameOverReason;
-
 			let jesterHired = prev.jesterHired;
-
-			const ownedPlanets = planets.filter((p) => p.owned);
-			const ownedCount = ownedPlanets.length;
-
+			let planets = prev.planets;
 			let banditContractActive = prev.banditContractActive;
 			let banditNextReportDay = prev.banditNextReportDay;
-
+			let pendingDaySummary = prev.pendingDaySummary;
 			let warActive = prev.warActive;
 			let warType = prev.warType;
 			let warOurPlanetId = prev.warOurPlanetId;
@@ -705,8 +718,25 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let warDaysElapsed = prev.warDaysElapsed;
 			let warInvestment = prev.warInvestment;
 			let warPendingReport = prev.warPendingReport;
-
 			let godDenied = prev.godDenied;
+
+			const currentVisitorId = prev.currentVisitor?.id || null;
+			const effects = option.effects || {};
+			const special = effects.special;
+			let coins = prev.player.coins + (effects.coins ?? 0);
+			let happiness = prev.player.happiness + (effects.happiness ?? 0);
+			let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
+			let rebellionChance = prev.rebellionChance + (effects.rebellionDelta ?? 0);
+
+			if (effects.addPlanetId) {
+				planets = prev.planets.map((p) => (p.id === effects.addPlanetId ? { ...p, owned: true } : p));
+			}
+			const ownedPlanets = planets.filter((p) => p.owned);
+			const ownedCount = ownedPlanets.length;
+			coins = Math.max(0, coins);
+			happiness = Math.max(0, happiness);
+			taxRate = Math.max(0, Math.min(0.5, taxRate));
+			rebellionChance = Math.max(0, rebellionChance);
 
 			if (special === "start_bandit_contract") {
 				banditContractActive = true;
@@ -734,7 +764,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				if (win) {
 					coins += 150;
 					happiness = Math.min(100, happiness + 10);
-					rebellionChance = Math.max(0, rebellionChance - 5);
+					rebellionChance -= 5;
 					extraReactionParts.push(
 						"You are an eggstraordinary being. Your vaults are now filled to the brim."
 					);
@@ -773,7 +803,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				scientistStep = 3;
 			}
 
-			if (special === "tax_collector" && ownedCount > 0) {
+			if (special === "tax_collector") {
 				const baseTaxPerPlanet = 100;
 				const taxIncome = Math.round(ownedCount * baseTaxPerPlanet * taxRate);
 				coins += taxIncome;
@@ -912,14 +942,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 					"You successfully conquered every planet. You die a hero to your people, and are remembered as the greatest duck overlord of all time.";
 			}
 
-			let day = prev.day;
-			let visitsToday = prev.visitsToday;
-			let showDaySummary = prev.showDaySummary;
-			let lastDaySummary = prev.lastDaySummary;
-			let dayStartCoins = prev.dayStartCoins;
-			let dayStartHappiness = prev.dayStartHappiness;
-			let dayStartRebellion = prev.dayStartRebellion;
-
 			const extraReaction = extraReactionParts.length > 0 ? extraReactionParts.join(" ") : "";
 			const combinedReaction = [baseReaction, extraReaction]
 				.map((s) => s.trim())
@@ -932,12 +954,14 @@ export const useGameStore = create<GameState>((set, get) => ({
 				if (currentVisitorId && !visitorsSeenToday.includes(currentVisitorId)) {
 					visitorsSeenToday.push(currentVisitorId);
 				}
-				visitsToday += 1;
+
+				if (currentVisitorId !== "jester_entertainment" && currentVisitorId !== "war_general_report")
+					visitsToday += 1;
 
 				const endOfDay = visitsToday >= prev.maxVisitorsPerDay;
 
 				if (endOfDay) {
-					if (happiness >= 80 && ownedCount > 0) {
+					if (happiness >= 80) {
 						coins += ownedCount * 5;
 					}
 
@@ -948,9 +972,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 					const rebellionThreshold = 30;
 					if (rebellionChance >= rebellionThreshold && !gameOver) {
 						const canLoseCoins = coins >= 100;
-						const canLosePlanet = ownedCount > 0;
 
-						if (canLoseCoins && canLosePlanet) {
+						if (canLoseCoins) {
 							coins -= 100;
 							const lost = ownedPlanets[Math.floor(Math.random() * ownedCount)];
 							planets = planets.map((p) => (p.id === lost.id ? { ...p, owned: false } : p));
@@ -985,7 +1008,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 							happinessChange,
 							rebellionChange,
 						};
-						showDaySummary = true;
+						pendingDaySummary = true;
 
 						day = prev.day + 1;
 						visitsToday = 0;
@@ -1041,6 +1064,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				warPendingReport,
 				godDenied,
 				jesterHired,
+				pendingDaySummary,
 			};
 		});
 
@@ -1053,8 +1077,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 	acknowledgeDaySummary() {
 		const state = get();
 		if (state.gameOver) return;
-
-		set({ showDaySummary: false, reactionText: null, currentVisitor: null });
+		set({ showDaySummary: false, pendingDaySummary: false, reactionText: null, currentVisitor: null });
 		get().nextVisitor();
 	},
 }));

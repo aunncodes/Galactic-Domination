@@ -10,7 +10,6 @@ export default function VisitorPanel() {
 	const reactionText = useGameStore((state) => state.reactionText);
 	const nextVisitor = useGameStore((state) => state.nextVisitor);
 	const showDaySummary = useGameStore((state) => state.showDaySummary);
-
 	const [displayedText, setDisplayedText] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
 
@@ -72,11 +71,12 @@ export default function VisitorPanel() {
 				position: "relative",
 				height: 450,
 				borderRadius: 16,
-				border: "1px solid #333",
-				background: "linear-gradient(to top, #050509 0, #111 35%, #181818 100%)",
+				border: "1px solid #1d4ed8",
+				backgroundColor: "#020617",
 				overflow: "hidden",
 				padding: "20px 40px",
 				boxSizing: "border-box",
+				boxShadow: "0 20px 50px rgba(0,0,0,0.7)",
 			}}
 		>
 			<motion.div
@@ -94,8 +94,8 @@ export default function VisitorPanel() {
 					alignItems: "center",
 					justifyContent: "center",
 					borderRadius: 14,
-					backgroundColor: "#000",
-					border: "1px solid #555",
+					backgroundColor: "#020617",
+					border: "1px solid #334155",
 					overflow: "hidden",
 					boxShadow: "0 4px 20px rgba(0,0,0,0.6)",
 				}}
@@ -114,9 +114,9 @@ export default function VisitorPanel() {
 					right: 40,
 					maxWidth: 420,
 					padding: "12px 14px",
-					backgroundColor: "#111",
+					backgroundColor: "#020f3a",
 					borderRadius: 12,
-					border: "1px solid #555",
+					border: "1px solid #1e3a8a",
 					boxShadow: "0 4px 18px rgba(0,0,0,0.8)",
 					fontSize: 15,
 				}}
@@ -159,9 +159,9 @@ export default function VisitorPanel() {
 									marginBottom: 10,
 									padding: "10px 14px",
 									fontSize: 15,
-									backgroundColor: "#222",
+									backgroundColor: "#0b1120",
 									color: "white",
-									border: "1px solid #555",
+									border: "1px solid #1e3a8a",
 									borderRadius: 6,
 									cursor: notEnoughCoins || gameOver ? "not-allowed" : "pointer",
 									textAlign: "left",

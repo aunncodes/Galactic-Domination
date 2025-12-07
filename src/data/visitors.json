@@ -1,19 +1,15 @@
 [
 	{
 		"id": "tax_officer",
-		"name": "Galactic Tax Officer",
+		"name": "Tax Officer",
 		"sprite": "tax_officer.png",
 		"text": "My liege, analysis shows that tax increases on the population shall benefit our economy. We will increase taxes as soon as you give permission.",
 		"weight": 0.5,
-		"conditions": {
-			"minCoins": 0
-		},
 		"options": [
 			{
 				"id": "raise_taxes",
 				"text": "Very well then. The bread of the poor shall fill my vaults.",
 				"effects": {
-					"coins": 60,
 					"happiness": -8,
 					"taxRateDelta": 0.02,
 					"rebellionDelta": 4
@@ -68,9 +64,6 @@
 		"sprite": "merchant.png",
 		"text": "Oh great warlord, I offer thee artifacts from worlds thousands of galaxies away. They might bring happiness to your subjects.",
 		"weight": 0.3,
-		"conditions": {
-			"minCoins": 50
-		},
 		"options": [
 			{
 				"id": "buy_artifacts",
@@ -97,9 +90,6 @@
 		"sprite": "space_wizard.png",
 		"text": "Overlord... care to take a gamble with the currents of fate?",
 		"weight": 0.3,
-		"conditions": {
-			"minCoins": 10
-		},
 		"options": [
 			{
 				"id": "wizard_gamble_yes",
@@ -107,7 +97,7 @@
 				"effects": {
 					"special": "wizard_gamble"
 				},
-				"reaction": "Excellent. Let’s see the outcome."
+				"reaction": "Excellent!"
 			},
 			{
 				"id": "wizard_gamble_no",
@@ -126,7 +116,6 @@
 		"text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
 		"weight": 0.3,
 		"conditions": {
-			"minCoins": 40,
 			"minRebellionChance": 10
 		},
 		"options": [
@@ -159,8 +148,7 @@
 		"text": "For a small offering, I will peer into the mood of your subjects.",
 		"weight": 0.5,
 		"conditions": {
-			"minCoins": 20,
-			"minRebellionChance": 20
+			"minRebellionChance": 10
 		},
 		"options": [
 			{
@@ -184,38 +172,15 @@
 		]
 	},
 	{
-		"id": "tax_collector",
-		"name": "Imperial Tax Collector",
-		"sprite": "tax_collector.png",
-		"text": "Lord {user}, your citizens have paid their taxes. Their bread now fills your vaults.",
-		"weight": 1.0,
-		"conditions": {
-			"minCoins": 0
-		},
-		"options": [
-			{
-				"id": "accept_taxes",
-				"text": "Good job.",
-				"effects": {
-					"special": "tax_collector"
-				},
-				"reaction": "I thank my liege for showing such kindness to a featherbrained individual like me."
-			}
-		]
-	},
-	{
 		"id": "refugee_fleet",
 		"name": "Refugee Fleet",
 		"sprite": "refugees.png",
 		"text": "Oh great Lord {user}, he who is the conqueror of vast space, we beg you to grant us sanctuary.",
-		"weight": 0.8,
-		"conditions": {
-			"minCoins": 30
-		},
+		"weight": 0.2,
 		"options": [
 			{
 				"id": "accept_refugees",
-				"text": "We shall take them under our wing.",
+				"text": "I shall take you under my wing.",
 				"effects": {
 					"coins": -30,
 					"happiness": 15
@@ -224,7 +189,7 @@
 			},
 			{
 				"id": "turn_them_away",
-				"text": "Turn them away. They can duck and cover wherever else they wish.",
+				"text": "Go away! They can duck and cover wherever else they wish.",
 				"effects": {
 					"happiness": -10,
 					"rebellionDelta": 5
@@ -299,6 +264,9 @@
 		"sprite": "jester.png",
 		"text": "Great lord {user}! If you give me a bit of coin, I will entertain you and your subjects for the rest of your reign!",
 		"weight": 0.1,
+		"conditions": {
+			"jesterHired": false
+		},
 		"options": [
 			{
 				"id": "pay_jester",
@@ -317,6 +285,38 @@
 					"happiness": -2
 				},
 				"reaction": "Alright... maybe another time."
+			}
+		]
+	},
+	{
+		"id": "protestor",
+		"name": "Protestor",
+		"sprite": "protestor.png",
+		"text": "Lord {user}, we demand better living conditions and lower taxes! Hear our quacks!",
+		"weight": 0.2,
+		"conditions": {
+			"minRebellionChance": 15,
+			"minTaxRate": 0.19
+		},
+		"options": [
+			{
+				"id": "meet_demands",
+				"text": "Very well, I shall lower taxes and improve living conditions. (-5% tax rate)",
+				"effects": {
+					"taxRateDelta": -0.05,
+					"happiness": 10,
+					"rebellionDelta": -15
+				},
+				"reaction": "Thank you, Lord {user}. You are truly an eggstrordinary leader."
+			},
+			{
+				"id": "suppress_protest",
+				"text": "Silence! Anyone caught protesting will be punished severely.",
+				"effects": {
+					"happiness": -15,
+					"rebellionDelta": 20
+				},
+				"reaction": "You will regret this, tyrant! The people will rise against you!"
 			}
 		]
 	}

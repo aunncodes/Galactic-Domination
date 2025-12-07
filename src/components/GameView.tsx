@@ -13,7 +13,6 @@ export default function GameView() {
 	const gameOver = useGameStore((state) => state.gameOver);
 	const gameOverReason = useGameStore((state) => state.gameOverReason);
 	const totalPlanets = useGameStore((state) => state.planets.length);
-
 	const showDaySummary = useGameStore((state) => state.showDaySummary);
 	const lastDaySummary = useGameStore((state) => state.lastDaySummary);
 	const acknowledgeDaySummary = useGameStore((state) => state.acknowledgeDaySummary);
@@ -48,9 +47,10 @@ export default function GameView() {
 					justifyContent: "space-between",
 					alignItems: "center",
 					padding: "10px 20px",
-					backgroundColor: "rgba(0,0,0,0.75)",
-					borderBottom: "1px solid #333",
+					backgroundColor: "#0b1120",
+					borderBottom: "1px solid #1d4ed8",
 					zIndex: 2,
+					fontSize: 14,
 				}}
 			>
 				<div>Day: {day}</div>
@@ -89,9 +89,9 @@ export default function GameView() {
 							alignItems: "center",
 							justifyContent: "center",
 							borderRadius: 16,
-							background:
-								"radial-gradient(circle at top, rgba(80,80,80,0.8) 0, rgba(0,0,0,0.9) 60%, rgba(0,0,0,0.95) 100%)",
-							border: "1px solid #333",
+							backgroundColor: "#020617",
+							border: "1px solid #1d4ed8",
+							boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
 						}}
 					>
 						<img
@@ -124,7 +124,7 @@ export default function GameView() {
 					style={{
 						position: "absolute",
 						inset: 0,
-						backgroundColor: "rgba(0,0,0,0.78)",
+						backgroundColor: "rgba(15,23,42,0.9)",
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "center",
@@ -146,11 +146,12 @@ export default function GameView() {
 						style={{
 							marginTop: 20,
 							padding: "8px 16px",
-							backgroundColor: "#222",
+							backgroundColor: "#1d4ed8",
 							color: "white",
-							border: "1px solid #555",
+							border: "1px solid #3b82f6",
 							borderRadius: 4,
 							cursor: "pointer",
+							fontWeight: 600,
 						}}
 					>
 						Start next day
@@ -163,7 +164,7 @@ export default function GameView() {
 					style={{
 						position: "absolute",
 						inset: 0,
-						backgroundColor: "rgba(0,0,0,0.85)",
+						backgroundColor: "rgba(15,23,42,0.95)",
 						display: "flex",
 						flexDirection: "column",
 						alignItems: "center",
