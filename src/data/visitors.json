@@ -111,23 +111,23 @@
 		]
 	},
 	{
-		"id": "bandit_hunter",
+		"id": "bounty_hunter",
 		"name": "Bounty Huntress",
-		"sprite": "bandit_huntress.png",
+		"sprite": "bounty_huntress.png",
 		"text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
 		"weight": 0.3,
 		"conditions": {
-			"banditContractActive": false
+			"bountyContractActive": false
 		},
 		"options": [
 			{
-				"id": "hire_bandit_hunter",
+				"id": "hire_bounty_hunter",
 				"text": "Very well then. I shall pray that you catch them in your talons. (-40 coins)",
 				"effects": {
 					"coins": -40,
 					"happiness": 5,
 					"rebellionDelta": -10,
-					"special": "start_bandit_contract"
+					"special": "start_bounty_contract"
 				},
 				"reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
 			},
@@ -387,7 +387,7 @@
 		"name": "Donald Duck",
 		"sprite": "donald_duck.png",
 		"text": "Listen folks, the refugees, they're coming in, and let me tell you, they're stealing our land. They don’t contribute anything, to us folks! They're eating the ducks, they're eating the chicks! They take our money, they take our property. It’s unbelievable! But I've got a solution, a tremendous solution. For the right price, I can get rid of them. We will make this empire great again, believe me! ",
-		"weight": 0.05,
+		"weight": 0.2,
 		"conditions": {
 			"refugeeBanned": false
 		},

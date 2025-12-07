@@ -27,15 +27,15 @@ export interface VisitorConditions {
 	jesterHired?: boolean;
 	internHired?: boolean;
 	refugeeBanned?: boolean;
-	banditContractActive?: boolean;
+	bountyContractActive?: boolean;
 }
 
 export type SpecialEffect =
 	| "wizard_gamble"
 	| "prophet_pay"
 	| "tax_collector"
-	| "start_bandit_contract"
-	| "bandit_continue_contract"
+	| "start_bounty_contract"
+	| "bounty_continue_contract"
 	| "start_war_defend"
 	| "start_war_attack"
 	| "war_surrender"
@@ -109,8 +109,8 @@ interface GameState {
 	dayStartCoins: number;
 	dayStartHappiness: number;
 	dayStartRebellion: number;
-	banditContractActive: boolean;
-	banditNextReportDay: number | null;
+	bountyContractActive: boolean;
+	bountyNextReportDay: number | null;
 	reactionText: string | null;
 	gameOver: boolean;
 	gameOverReason: string | null;
@@ -149,8 +149,8 @@ const initialState = {
 	dayStartCoins: 100,
 	dayStartHappiness: 50,
 	dayStartRebellion: 0,
-	banditContractActive: false,
-	banditNextReportDay: null,
+	bountyContractActive: false,
+	bountyNextReportDay: null,
 	scientistStep: 0,
 	reactionText: null,
 	gameOver: false,
@@ -187,7 +187,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.maxHappiness !== undefined && state.player.happiness > c.maxHappiness) return false;
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
-	if (c.banditContractActive !== undefined && c.banditContractActive !== state.banditContractActive) return false;
+	if (c.bountyContractActive !== undefined && c.bountyContractActive !== state.bountyContractActive) return false;
 	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
@@ -525,18 +525,18 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.banditContractActive && state.banditNextReportDay !== null && state.day >= state.banditNextReportDay && state.visitsToday === 0) {
+		if (state.bountyContractActive && state.bountyNextReportDay !== null && state.day >= state.bountyNextReportDay && state.visitsToday === 0) {
 			const success = Math.random() < 0.6;
 
 			if (success) {
 				const resultVisitor: Visitor = {
-					id: "bandit_result_success",
-					name: "Bandit Huntress",
-					sprite: "bandit_huntress.png",
+					id: "bounty_result_success",
+					name: "bounty Huntress",
+					sprite: "bounty_huntress.png",
 					text: "Overlord, I have found the criminal and dealt with them. Your subjects are safer now.",
 					options: [
 						{
-							id: "bandit_success_ack",
+							id: "bounty_success_ack",
 							text: "Excellent work.",
 							effects: {
 								happiness: 20,
@@ -549,28 +549,28 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 				set({
 					currentVisitor: resultVisitor,
-					banditContractActive: false,
-					banditNextReportDay: null,
+					bountyContractActive: false,
+					bountyNextReportDay: null,
 				});
 			} else {
 				const resultVisitor: Visitor = {
-					id: "bandit_result_fail",
-					name: "Bandit Huntress",
-					sprite: "bandit_huntress.png",
+					id: "bounty_result_fail",
+					name: "bounty Huntress",
+					sprite: "bounty_huntress.png",
 					text: "I have not yet found the criminal, overlord. They are elusive. Shall I continue the hunt?",
 					options: [
 						{
-							id: "bandit_fail_continue",
+							id: "bounty_fail_continue",
 							text: "Yes, keep hunting. (-30 Coins)",
 							effects: {
 								coins: -30,
 								rebellionDelta: -5,
-								special: "bandit_continue_contract",
+								special: "bounty_continue_contract",
 							},
 							reaction: "Understood. I will keep tracking them. My fee rises with every passing day.",
 						},
 						{
-							id: "bandit_fail_stop",
+							id: "bounty_fail_stop",
 							text: "No. Stand down.",
 							effects: {
 								happiness: -10,
@@ -761,8 +761,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let jesterHired = prev.jesterHired;
 			let internHired = prev.internHired;
 			let planets = prev.planets;
-			let banditContractActive = prev.banditContractActive;
-			let banditNextReportDay = prev.banditNextReportDay;
+			let bountyContractActive = prev.bountyContractActive;
+			let bountyNextReportDay = prev.bountyNextReportDay;
 			let pendingDaySummary = prev.pendingDaySummary;
 			let godDenied = prev.godDenied;
 			let refugeeBanned = prev.refugeeBanned;
@@ -785,14 +785,14 @@ export const useGameStore = create<GameState>((set, get) => ({
 			taxRate = Math.max(0, Math.min(0.5, taxRate));
 			rebellionChance = Math.max(0, rebellionChance);
 
-			if (special === "start_bandit_contract") {
-				banditContractActive = true;
-				banditNextReportDay = prev.day + 1;
+			if (special === "start_bounty_contract") {
+				bountyContractActive = true;
+				bountyNextReportDay = prev.day + 1;
 			}
 
-			if (special === "bandit_continue_contract") {
-				banditContractActive = true;
-				banditNextReportDay = prev.day + 1;
+			if (special === "bounty_continue_contract") {
+				bountyContractActive = true;
+				bountyNextReportDay = prev.day + 1;
 			}
 
 			if (special === "god_deny") {
@@ -1009,8 +1009,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 				dayStartCoins,
 				dayStartHappiness,
 				dayStartRebellion,
-				banditContractActive,
-				banditNextReportDay,
+				bountyContractActive,
+				bountyNextReportDay,
 				reactionText,
 				gameOver,
 				gameOverReason,
