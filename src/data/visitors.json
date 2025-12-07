@@ -10,6 +10,7 @@
 				"id": "raise_taxes",
 				"text": "Very well then. The bread of the poor shall fill my vaults.",
 				"effects": {
+					"coins": 20,
 					"happiness": -8,
 					"taxRateDelta": 0.02,
 					"rebellionDelta": 4

@@ -10,6 +10,7 @@ interface GameViewProps {
 export default function GameView({ onGameOver }: GameViewProps) {
 	const coins = useGameStore((state) => state.player.coins);
 	const happiness = useGameStore((state) => state.player.happiness);
+	const gender = useGameStore((state) => state.player.gender);
 	const day = useGameStore((state) => state.day);
 	const ownedPlanetsCount = useGameStore((state) => state.ownedPlanetsCount);
 	const taxRate = useGameStore((state) => state.taxRate);
@@ -99,15 +100,17 @@ export default function GameView({ onGameOver }: GameViewProps) {
 							boxShadow: "0 20px 50px rgba(0,0,0,0.6)",
 						}}
 					>
-						<img
-							src="characters/throne.png"
-							alt="Overlord on throne"
-							style={{
-								maxWidth: "100%",
-								maxHeight: "100%",
-								objectFit: "contain",
-							}}
-						/>
+					<img
+						src={gender === "female"
+							? "characters/thronefemale.png"
+							: "characters/thronemale.png"}
+						alt="Overlord on throne"
+						style={{
+							maxWidth: "100%",
+							maxHeight: "100%",
+							objectFit: "contain",
+						}}
+					/>
 					</div>
 				</div>
 
