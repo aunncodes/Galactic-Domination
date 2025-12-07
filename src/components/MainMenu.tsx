@@ -39,7 +39,7 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 					borderRadius: 12,
 					border: "1px solid #1e3a8a",
 					backgroundColor: "#020f3a",
-					minWidth: 320,
+					maxWidth: 600,
 					boxShadow: "0 18px 45px rgba(0,0,0,0.6)",
 				}}
 			>

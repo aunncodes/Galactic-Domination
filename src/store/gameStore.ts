@@ -799,7 +799,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				planets = prev.planets.map((p) => (p.id === effects.addPlanetId ? { ...p, owned: true } : p));
 			}
 			const ownedPlanets = planets.filter((p) => p.owned);
-			const ownedCount = ownedPlanets.length;
+			let ownedCount = ownedPlanets.length;
 			coins = Math.max(0, coins);
 			happiness = Math.max(0, happiness);
 			taxRate = Math.max(0, Math.min(0.5, taxRate));
@@ -908,6 +908,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 			if (special === "war_surrender" && effects.warOurPlanetId) {
 				planets = planets.map((p) => (p.id === effects.warOurPlanetId ? { ...p, owned: false } : p));
+				ownedCount = planets.filter((p) => p.owned).length;
 				extraReactionParts.push(
 					`You abandon ${planets.find((p) => p.id === effects.warOurPlanetId)?.name ?? "the world"}.`
 				);
@@ -1056,11 +1057,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 				pendingDaySummary,
 			};
 		});
-
-		const after = get();
-		if (!after.gameOver && !after.showDaySummary) {
-			return;
-		}
 	},
 
 	acknowledgeDaySummary() {
