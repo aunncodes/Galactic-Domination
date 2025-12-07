@@ -198,9 +198,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.minRebellionChance !== undefined && state.rebellionChance < c.minRebellionChance) return false;
 	if (c.maxRebellionChance !== undefined && state.rebellionChance > c.maxRebellionChance) return false;
 	if (c.requiresOwnedPlanet !== undefined && !state.planets.some((p) => p.id === c.requiresOwnedPlanet && p.owned)) return false;
-	if (c.requiresPlanetNotOwned !== undefined && state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned)) return false;
-
-	return true;
+	return !(c.requiresPlanetNotOwned !== undefined && state.planets.some((p) => p.id === c.requiresPlanetNotOwned && p.owned));
 }
 
 function standardRand<T>(arr: T[]): T {
@@ -262,7 +260,7 @@ function resolveWar(params: {
 	if (youWin) {
 		if (type === "defense") {
 			resultText = "Your forces prevail and the planet is successfully defended.";
-			newHappiness = Math.min(100, params.happiness + 5);
+			newHappiness =params.happiness + 5;
 		} else {
 			if (enemyPlanetId) {
 				newPlanets = params.planets.map((p) => (p.id === enemyPlanetId ? { ...p, owned: true } : p));
@@ -270,7 +268,7 @@ function resolveWar(params: {
 			} else {
 				resultText = "Your attack is successful.";
 			}
-			newHappiness = Math.min(100, params.happiness + 5);
+			newHappiness = params.happiness + 5;
 		}
 	} else {
 		if (type === "defense") {
@@ -614,9 +612,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, our planet ${ourPlanet.name} is being attacked by ${enemyPlanet.name}. We must decide our investment.`,
 					options: [
 						{
-							text: `Defend ${ourPlanet.name} (-${defendCost * state.warDiscount} coins)`,
+							text: `Defend ${ourPlanet.name} (-${Math.floor(defendCost * state.warDiscount)} coins)`,
 							effects: {
-								coins: -defendCost * state.warDiscount,
+								coins: -Math.floor(defendCost * state.warDiscount),
 								special: "start_war_defend",
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
@@ -625,9 +623,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will do our best with the resources given.",
 						},
 						{
-							text: `Invest heavily in the defense (-${heavyDefendCost * state.warDiscount} coins)`,
+							text: `Invest heavily in the defense (-${Math.floor(heavyDefendCost * state.warDiscount)} coins)`,
 							effects: {
-								coins: -heavyDefendCost * state.warDiscount,
+								coins: -Math.floor(heavyDefendCost * state.warDiscount),
 								special: "start_war_defend",
 								warOurPlanetId: ourPlanet.id,
 								warEnemyPlanetId: enemyPlanet.id,
@@ -665,9 +663,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 					text: `Lord, for an investment of coins we can attack ${enemyPlanet.name}. How much shall we commit?`,
 					options: [
 						{
-							text: `Attack ${enemyPlanet.name} (-${attackCost * state.warDiscount} coins)`,
+							text: `Attack ${enemyPlanet.name} (-${Math.floor(attackCost * state.warDiscount)} coins)`,
 							effects: {
-								coins: -attackCost * state.warDiscount,
+								coins: -Math.floor(attackCost * state.warDiscount),
 								special: "start_war_attack",
 								warEnemyPlanetId: enemyPlanet.id,
 								warInvestment: attackCost,
@@ -675,9 +673,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 							reaction: "We will create a solid force.",
 						},
 						{
-							text: `Launch a massive invasion (-${heavyAttackCost * state.warDiscount} coins)`,
+							text: `Launch a massive invasion (-${Math.floor(heavyAttackCost * state.warDiscount)} coins)`,
 							effects: {
-								coins: -heavyAttackCost * state.warDiscount,
+								coins: -Math.floor(heavyAttackCost * state.warDiscount),
 								special: "start_war_attack",
 								warEnemyPlanetId: enemyPlanet.id,
 								warInvestment: heavyAttackCost,
@@ -764,7 +762,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let ownedCount = ownedPlanets.length;
 			coins = Math.max(0, coins);
 			happiness = Math.max(0, happiness);
-			taxRate = Math.max(0, Math.min(0.5, taxRate));
+			taxRate = Math.max(0, taxRate);
 			rebellionChance = Math.max(0, rebellionChance);
 
 			if (special === "start_bounty_contract") {
@@ -804,12 +802,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 				const win = Math.random() < 0.5;
 				if (win) {
 					coins += 150;
-					happiness = Math.min(100, happiness + 10);
+					happiness += 10;
 					rebellionChance -= 5;
 					extraReactionParts.push("You are an eggstraordinary being. Your vaults are now filled to the brim.");
 				} else {
-					coins = Math.max(0, coins - 75);
-					happiness = Math.max(0, happiness - 15);
+					coins -= 75;
+					happiness -= 15;
 					rebellionChance += 5;
 					extraReactionParts.push("Your empire is slowly quacking apart. Your wealth and reputation are flying away.");
 				}
@@ -915,7 +913,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 				if (endOfDay) {
 					if (happiness < 10) {
-						rebellionChance = Math.min(100, rebellionChance + 3);
+						rebellionChance += 3;
 					}
 					const rebellionThreshold = 30;
 					if (rebellionChance >= rebellionThreshold && !gameOver) {

@@ -89,6 +89,7 @@
 			{
 				"text": "Sure, after all, I’m a pretty lucky duck.",
 				"effects": {
+					"happiness": -3,
 					"special": "wizard_gamble"
 				},
 				"reaction": "Excellent!"
@@ -96,9 +97,9 @@
 			{
 				"text": "I must reject your offer. I’ll just pray that I have a stroke of good duck instead.",
 				"effects": {
-					"happiness": 2
+					"happiness": 3
 				},
-				"reaction": "Such ignorance will cause irreparable quacks in your empire. Collapse is imminent. "
+				"reaction": "Such ignorance will cause irreparable quacks in your empire. Collapse is imminent."
 			}
 		]
 	},
@@ -107,7 +108,7 @@
 		"name": "Bounty Huntress",
 		"sprite": "bounty_huntress.png",
 		"text": "Overlord, a criminal wreaks havoc on your subjects. The civilians are quacking in fear. Pay me, and I will hunt them down.",
-		"weight": 0.3,
+		"weight": 0.2,
 		"conditions": {
 			"bountyContractActive": false
 		},
@@ -137,7 +138,7 @@
 		"name": "Witch",
 		"sprite": "prophet.png",
 		"text": "For a small offering, I will peer into the mood of your subjects.",
-		"weight": 0.5,
+		"weight": 0.2,
 		"conditions": {
 			"minRebellionChance": 10
 		},
@@ -146,6 +147,7 @@
 				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered. (-30 coins)",
 				"effects": {
 					"coins": -30,
+					"happiness": 3,
 					"special": "prophet_pay"
 				},
 				"reaction": "I will reveal some quacking knowledge, pay close attention."
