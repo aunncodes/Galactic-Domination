@@ -14,7 +14,7 @@ function App() {
 		return <MainMenu onStartGame={() => setScreen("game")} />;
 	}
 
-	return <GameView />;
+	return <GameView onGameOver={() => setScreen("menu")}/>;
 }
 
 export default App;

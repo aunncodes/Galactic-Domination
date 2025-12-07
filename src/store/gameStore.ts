@@ -85,6 +85,9 @@ export interface DaySummary {
 	rebellionChange: number;
 }
 
+const planets: Planet[] = planetsData as Planet[];
+const visitors: Visitor[] = visitorsData as Visitor[];
+
 interface GameState {
 	player: Player;
 	planets: Planet[];
@@ -121,10 +124,46 @@ interface GameState {
 	godDenied: boolean;
 	jesterHired: boolean;
 	pendingDaySummary: boolean;
+	resetGame: () => void;
 }
 
-const planets: Planet[] = planetsData as Planet[];
-const visitors: Visitor[] = visitorsData as Visitor[];
+const initialState = {
+	player: {
+		name: "",
+		gender: null,
+		coins: 100,
+		happiness: 50,
+	},
+	planets,
+	day: 1,
+	currentVisitor: null,
+	taxRate: 0.15,
+	rebellionChance: 0,
+	jesterHired: false,
+	visitsToday: 0,
+	maxVisitorsPerDay: 5,
+	showDaySummary: false,
+	lastDaySummary: null,
+	dayStartCoins: 100,
+	dayStartHappiness: 50,
+	dayStartRebellion: 0,
+	banditContractActive: false,
+	banditNextReportDay: null,
+	scientistStep: 0,
+	reactionText: null,
+	gameOver: false,
+	gameOverReason: null,
+	visitorsSeenToday: [],
+	warActive: false,
+	warType: null,
+	warOurPlanetId: null,
+	warEnemyPlanetId: null,
+	warDaysElapsed: 0,
+	warInvestment: 0,
+	warPendingReport: null,
+	godDenied: false,
+	pendingDaySummary: false,
+};
 
 function getRandom(arr: Visitor[]): Visitor {
 	const totalWeight = arr.reduce((sum, v) => sum + (v.weight ?? 1), 0);
@@ -245,15 +284,7 @@ function createWarStatusVisitor(state: GameState): Visitor | null {
 }
 
 export const useGameStore = create<GameState>((set, get) => ({
-	player: {
-		name: "",
-		gender: null,
-		coins: 100,
-		happiness: 50,
-	},
-
-	planets,
-
+	...initialState,
 	setPlayerInfo(name, gender) {
 		set((prev) => ({
 			...prev,
@@ -264,35 +295,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			},
 		}));
 	},
-
-	day: 1,
-	currentVisitor: null,
-	taxRate: 0.15,
-	rebellionChance: 0,
-	jesterHired: false,
-	visitsToday: 0,
-	maxVisitorsPerDay: 5,
-	showDaySummary: false,
-	lastDaySummary: null,
-	dayStartCoins: 100,
-	dayStartHappiness: 50,
-	dayStartRebellion: 0,
-	banditContractActive: false,
-	banditNextReportDay: null,
-	scientistStep: 0,
-	reactionText: null,
-	gameOver: false,
-	gameOverReason: null,
-	visitorsSeenToday: [],
-	warActive: false,
-	warType: null,
-	warOurPlanetId: null,
-	warEnemyPlanetId: null,
-	warDaysElapsed: 0,
-	warInvestment: 0,
-	warPendingReport: null,
-	godDenied: false,
-	pendingDaySummary: false,
 
 	ownedPlanetsCount() {
 		return get().planets.filter((p) => p.owned).length;
@@ -1080,4 +1082,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 		set({ showDaySummary: false, pendingDaySummary: false, reactionText: null, currentVisitor: null });
 		get().nextVisitor();
 	},
+
+	resetGame() {
+		set({ ...initialState });
+	}
 }));

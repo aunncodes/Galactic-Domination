@@ -3,7 +3,11 @@ import { useGameStore } from "../store/gameStore";
 import VisitorPanel from "./VisitorPanel";
 import background from "../assets/background.png";
 
-export default function GameView() {
+interface GameViewProps {
+	onGameOver: () => void;
+}
+
+export default function GameView({ onGameOver }: GameViewProps) {
 	const coins = useGameStore((state) => state.player.coins);
 	const happiness = useGameStore((state) => state.player.happiness);
 	const day = useGameStore((state) => state.day);
@@ -16,6 +20,7 @@ export default function GameView() {
 	const showDaySummary = useGameStore((state) => state.showDaySummary);
 	const lastDaySummary = useGameStore((state) => state.lastDaySummary);
 	const acknowledgeDaySummary = useGameStore((state) => state.acknowledgeDaySummary);
+	const resetGame = useGameStore((state) => state.resetGame);
 
 	useEffect(() => {
 		nextVisitor();
@@ -176,7 +181,26 @@ export default function GameView() {
 				>
 					<h1>Game Over</h1>
 					<p style={{ maxWidth: 480, marginTop: 12 }}>{gameOverReason}</p>
-					<p style={{ marginTop: 20, fontSize: 12 }}>Refresh the page to start a new run.</p>
+
+					<button
+						type="button"
+						onClick={() => {
+							resetGame();
+							onGameOver();
+						}}
+						style={{
+							marginTop: 24,
+							padding: "8px 16px",
+							borderRadius: 4,
+							border: "1px solid #3b82f6",
+							backgroundColor: "#1d4ed8",
+							color: "white",
+							cursor: "pointer",
+							fontWeight: 600,
+						}}
+					>
+						Return to menu
+					</button>
 				</div>
 			)}
 		</div>
