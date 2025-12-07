@@ -487,9 +487,9 @@ export const useGameStore = create<GameState>((set, get) => ({
 				options: [
 					{
 						id: "fund_science",
-						text: "Alright, take the funds. (-40 coins)",
+						text: "Alright, take the funds. (-30 coins)",
 						effects: {
-							coins: -40,
+							coins: -30,
 							happiness: 10,
 							special: "science_chain_continue",
 						},
@@ -603,7 +603,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			return;
 		}
 
-		if (state.day % 5 === 0 && state.visitsToday === 0 && ownedCount > 0) {
+		if (state.day % 5 === 0) {
 			const taxCollector: Visitor = {
 				id: "tax_collector",
 				name: "Imperial Tax Collector",
@@ -951,7 +951,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 				if (
 					currentVisitorId !== "jester_entertainment" &&
-					currentVisitorId !== "intern_money"
+					currentVisitorId !== "intern_money" &&
+					currentVisitorId !== "tax_collector"
 				)
 					visitsToday += 1;
 

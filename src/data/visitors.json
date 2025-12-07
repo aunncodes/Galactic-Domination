@@ -244,9 +244,9 @@
 		"options": [
 			{
 				"id": "fund_scientist",
-				"text": "Very well, I will give you the funding you desire. (-40 coins)",
+				"text": "Very well, I will give you the funding you desire. (-30 coins)",
 				"effects": {
-					"coins": -40,
+					"coins": -30,
 					"happiness": 5,
 					"special": "science_chain_start"
 				},
