@@ -12,7 +12,7 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 	const [name, setName] = useState("");
 	const [gender, setGender] = useState<"male" | "female" | "">("");
 
-	const canStart = name.trim().length > 0 && gender !== "";
+	const canStart = name.trim().length < 20 && name.trim().length > 0 && gender !== "";
 
 	const handleStart = () => {
 		if (!canStart) return;
