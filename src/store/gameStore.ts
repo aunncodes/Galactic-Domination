@@ -191,7 +191,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
 	if (c.bountyContractActive !== undefined && c.bountyContractActive !== state.bountyContractActive) return false;
-	if (c.warDiscountActive !== undefined && c.warDiscountActive !== state.warDiscount > 0) return false;
+	if (c.warDiscountActive !== undefined && c.warDiscountActive !== state.warDiscount < 1) return false;
 	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
 	if (c.maxTaxRate !== undefined && state.taxRate > c.maxTaxRate) return false;
