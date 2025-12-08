@@ -137,20 +137,21 @@
 		"id": "prophet",
 		"name": "Witch",
 		"sprite": "prophet.png",
-		"text": "For a small offering, I will peer into the mood of your subjects.",
+		"text": "For a small offering, I will be able to tell you how rebellious your citizens are feeling.",
 		"weight": 0.2,
 		"conditions": {
-			"minRebellionChance": 10
+			"minRebellionChance": 10,
+			"witchHired": false
 		},
 		"options": [
 			{
-				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered. (-30 coins)",
+				"text": "I shall pay you, but if I notice any signs of trickery, you’ll be tar and feathered. (-40 coins)",
 				"effects": {
-					"coins": -30,
+					"coins": -40,
 					"happiness": 3,
 					"special": "prophet_pay"
 				},
-				"reaction": "I will reveal some quacking knowledge, pay close attention."
+				"reaction": "Very well. On the top bar, you will now see your rebellion chance. Be careful not to let it reach 40, or your people will rise against you!"
 			},
 			{
 				"text": "Kiss my buttquack.",

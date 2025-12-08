@@ -5,9 +5,6 @@ import visitorsData from "../data/visitors.json";
 export interface Planet {
 	id: string;
 	name: string;
-	development: number;
-	rebellion: number;
-	leaderId: string;
 	owned: boolean;
 }
 
@@ -29,6 +26,7 @@ export interface VisitorConditions {
 	refugeeBanned?: boolean;
 	bountyContractActive?: boolean;
 	warDiscountActive?: boolean;
+	witchHired?: boolean;
 }
 
 export type SpecialEffect =
@@ -52,7 +50,6 @@ export type SpecialEffect =
 export interface VisitorOptionEffects {
 	coins?: number;
 	happiness?: number;
-	addPlanetId?: string;
 	taxRateDelta?: number;
 	rebellionDelta?: number;
 	special?: SpecialEffect;
@@ -64,7 +61,7 @@ export interface VisitorOptionEffects {
 export interface VisitorOption {
 	text: string;
 	effects?: VisitorOptionEffects;
-	reaction?: string;
+	reaction: string;
 }
 
 export interface Visitor {
@@ -127,6 +124,7 @@ interface GameState {
 	refugeeBanned: boolean;
 	pendingDaySummary: boolean;
 	resetGame: () => void;
+	witchHired: boolean;
 }
 
 const initialState = {
@@ -161,6 +159,7 @@ const initialState = {
 	visitorsSeenToday: [],
 	godDenied: false,
 	pendingDaySummary: false,
+	witchHired: false,
 };
 
 function getRandom(arr: Visitor[]): Visitor {
@@ -191,6 +190,7 @@ function visitorMatchesConditions(visitor: Visitor, state: GameState): boolean {
 	if (c.jesterHired !== undefined && c.jesterHired !== state.jesterHired) return false;
 	if (c.internHired !== undefined && c.internHired !== state.internHired) return false;
 	if (c.bountyContractActive !== undefined && c.bountyContractActive !== state.bountyContractActive) return false;
+	if (c.witchHired !== undefined && c.witchHired !== state.witchHired) return false;
 	if (c.warDiscountActive !== undefined && c.warDiscountActive !== state.warDiscount < 1) return false;
 	if (c.refugeeBanned !== undefined && c.refugeeBanned !== state.refugeeBanned) return false;
 	if (c.minTaxRate !== undefined && state.taxRate < c.minTaxRate) return false;
@@ -746,6 +746,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let godDenied = prev.godDenied;
 			let refugeeBanned = prev.refugeeBanned;
 			let warDiscount = prev.warDiscount;
+			let witchHired = prev.witchHired;
 
 			const currentVisitorId = prev.currentVisitor?.id || null;
 			const effects = option.effects || {};
@@ -755,9 +756,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let taxRate = prev.taxRate + (effects.taxRateDelta ?? 0);
 			let rebellionChance = prev.rebellionChance + (effects.rebellionDelta ?? 0);
 
-			if (effects.addPlanetId) {
-				planets = prev.planets.map((p) => (p.id === effects.addPlanetId ? { ...p, owned: true } : p));
-			}
 			const ownedPlanets = planets.filter((p) => p.owned);
 			let ownedCount = ownedPlanets.length;
 			coins = Math.max(0, coins);
@@ -814,15 +812,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			}
 
 			if (special === "prophet_pay") {
-				let prophecy: string;
-				if (rebellionChance >= 30) {
-					prophecy = "Rebellion is coming. Try to make your citizens happy, or you will be overthrown.";
-				} else if (rebellionChance >= 20) {
-					prophecy = "Ire blazes in the hearts of your ducks. The talons of rebellion may soon clutch your empire.";
-				} else {
-					prophecy = "Your rule is stable. Your subjects are content under your reign.";
-				}
-				extraReactionParts.push(prophecy);
+				witchHired = true;
 			}
 
 			if (special === "science_chain_start") {
@@ -1005,6 +995,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 				refugeeBanned,
 				pendingDaySummary,
 				warDiscount,
+				witchHired,
 			};
 		});
 	},

@@ -23,6 +23,8 @@ export default function GameView({ onGameOver }: GameViewProps) {
 	const lastDaySummary = useGameStore((state) => state.lastDaySummary);
 	const acknowledgeDaySummary = useGameStore((state) => state.acknowledgeDaySummary);
 	const resetGame = useGameStore((state) => state.resetGame);
+	const rebellionChance = useGameStore((state) => state.rebellionChance);
+	const witchHired = useGameStore((state) => state.witchHired);
 
 	useEffect(() => {
 		nextVisitor();
@@ -71,6 +73,9 @@ export default function GameView({ onGameOver }: GameViewProps) {
 				</div>
 
 				<Stat label="Tax rate" value={taxPercent} suffix="%" />
+				{witchHired && (
+				<Stat label="Rebellion Chance" value={parseInt((rebellionChance/40*100).toFixed(1))} suffix="%" />
+				)}
 			</div>
 
 			<div
