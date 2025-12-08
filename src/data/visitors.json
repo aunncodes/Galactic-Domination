@@ -41,7 +41,7 @@
 				"effects": {
 					"taxRateDelta": -0.05,
 					"coins": -40,
-					"happiness": 10,
+					"happiness": 10
 				},
 				"reaction": "Thank you, my lord. You have restored my hope for the future. May the whole empire quack your praises."
 			},
