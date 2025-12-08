@@ -5,9 +5,7 @@ export function useButtonSounds() {
   const clickRef = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
-    const click = new Audio(selectSfx);
-    click.volume = 0.1;
-    clickRef.current = click;
+    clickRef.current = new Audio(selectSfx);
   }, []);
 
   const playClick = useCallback(() => {
