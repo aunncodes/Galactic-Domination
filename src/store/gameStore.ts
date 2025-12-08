@@ -505,8 +505,8 @@ export const useGameStore = create<GameState>((set, get) => ({
 					{
 						text: "Awesome!",
 						effects: {
-							coins: 100,
-							happiness: 50,
+							coins: 90,
+							happiness: 25,
 							special: "science_chain_complete",
 						},
 						reaction: "I will do my best to continue achieving glory for the empire!",
