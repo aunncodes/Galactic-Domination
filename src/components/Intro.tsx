@@ -5,7 +5,7 @@ interface IntroProps {
 }
 
 export default function Intro({ onContinue }: IntroProps) {
-	const { playHover, playClick } = useButtonSounds();
+	const { playClick } = useButtonSounds();
 	return (
 		<div
 			style={{
@@ -57,7 +57,6 @@ export default function Intro({ onContinue }: IntroProps) {
 
 				<button
 					type="button"
-					onMouseEnter={playHover}
 					onClick={() => {
 						playClick();
 						onContinue();

@@ -5,7 +5,7 @@ interface CreditsPageProps {
 }
 
 export default function CreditsPage({ onBack }: CreditsPageProps) {
-	const { playHover, playClick } = useButtonSounds();
+	const { playClick } = useButtonSounds();
 	return (
 		<div
 			style={{
@@ -48,7 +48,6 @@ export default function CreditsPage({ onBack }: CreditsPageProps) {
 
 				<button
 					type="button"
-					onMouseEnter={playHover}
 					onClick={() => {
 						playClick();
 						onBack();

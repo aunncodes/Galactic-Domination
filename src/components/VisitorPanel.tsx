@@ -13,7 +13,7 @@ export default function VisitorPanel() {
 	const showDaySummary = useGameStore((state) => state.showDaySummary);
 	const [displayedText, setDisplayedText] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
-	const { playHover, playClick } = useButtonSounds();
+	const { playClick } = useButtonSounds();
 
 	const playerName = useGameStore((state) => state.player.name);
 	function resolveText(text: string): string {
@@ -145,7 +145,6 @@ export default function VisitorPanel() {
 
 						return (
 							<button
-								onMouseEnter={playHover}
 								onClick={() => {
 									playClick();
 									handleOptionClick(option);

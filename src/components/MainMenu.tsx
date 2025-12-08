@@ -9,7 +9,7 @@ interface MainMenuProps {
 
 export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 	const setPlayerInfo = useGameStore((state) => state.setPlayerInfo);
-	const { playHover, playClick } = useButtonSounds();
+	const { playClick } = useButtonSounds();
 	const [name, setName] = useState("");
 	const [gender, setGender] = useState<"male" | "female" | "">("");
 	const canStart = name.trim().length < 20 && name.trim().length > 0 && gender !== "";
@@ -66,7 +66,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 					<div style={{ display: "flex", gap: 8 }}>
 						<button
 							type="button"
-							onMouseEnter={playHover}
 							onClick={() => {
 								playClick();
 								setGender("male");
@@ -89,7 +88,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 
 						<button
 							type="button"
-							onMouseEnter={playHover}
 							onClick={() => {
 								playClick();
 								setGender("female");
@@ -115,7 +113,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 				<button
 					type="button"
 					disabled={!canStart}
-					onMouseEnter={playHover}
 					onClick={() => {
 						playClick();
 						handleStart();
@@ -135,7 +132,6 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 				</button>
 				<button
 					type="button"
-					onMouseEnter={playHover}
 					onClick={() => {
 						playClick();
 						onCredits();
