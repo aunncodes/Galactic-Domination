@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useGameStore } from "../store/gameStore";
+import {useButtonSounds} from "../hooks/useButtonSounds.ts";
 
 interface MainMenuProps {
 	onStartGame: () => void;
@@ -8,12 +9,10 @@ interface MainMenuProps {
 
 export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 	const setPlayerInfo = useGameStore((state) => state.setPlayerInfo);
-
+	const { playHover, playClick } = useButtonSounds();
 	const [name, setName] = useState("");
 	const [gender, setGender] = useState<"male" | "female" | "">("");
-
 	const canStart = name.trim().length < 20 && name.trim().length > 0 && gender !== "";
-
 	const handleStart = () => {
 		if (!canStart) return;
 		setPlayerInfo(name.trim(), gender as "male" | "female");
@@ -67,7 +66,11 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 					<div style={{ display: "flex", gap: 8 }}>
 						<button
 							type="button"
-							onClick={() => setGender("male")}
+							onMouseEnter={playHover}
+							onClick={() => {
+								playClick();
+								setGender("male");
+							}}
 							aria-pressed={gender === "male"}
 							style={{
 								flex: 1,
@@ -86,7 +89,11 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 
 						<button
 							type="button"
-							onClick={() => setGender("female")}
+							onMouseEnter={playHover}
+							onClick={() => {
+								playClick();
+								setGender("female");
+							}}
 							aria-pressed={gender === "female"}
 							style={{
 								flex: 1,
@@ -108,7 +115,11 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 				<button
 					type="button"
 					disabled={!canStart}
-					onClick={handleStart}
+					onMouseEnter={playHover}
+					onClick={() => {
+						playClick();
+						handleStart();
+					}}
 					style={{
 						width: "100%",
 						padding: "8px 12px",
@@ -124,7 +135,11 @@ export default function MainMenu({ onStartGame, onCredits }: MainMenuProps) {
 				</button>
 				<button
 					type="button"
-					onClick={() => onCredits()}
+					onMouseEnter={playHover}
+					onClick={() => {
+						playClick();
+						onCredits();
+					}}
 					style={{
 						width: "100%",
 						padding: "8px 12px",

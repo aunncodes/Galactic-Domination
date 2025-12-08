@@ -1,8 +1,11 @@
+import {useButtonSounds} from "../hooks/useButtonSounds.ts";
+
 interface CreditsPageProps {
 	onBack: () => void;
 }
 
 export default function CreditsPage({ onBack }: CreditsPageProps) {
+	const { playHover, playClick } = useButtonSounds();
 	return (
 		<div
 			style={{
@@ -45,7 +48,11 @@ export default function CreditsPage({ onBack }: CreditsPageProps) {
 
 				<button
 					type="button"
-					onClick={onBack}
+					onMouseEnter={playHover}
+					onClick={() => {
+						playClick();
+						onBack();
+					}}
 					style={{
 						marginTop: 12,
 						width: "100%",

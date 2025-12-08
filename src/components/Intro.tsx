@@ -1,8 +1,11 @@
+import {useButtonSounds} from "../hooks/useButtonSounds.ts";
+
 interface IntroProps {
 	onContinue: () => void;
 }
 
 export default function Intro({ onContinue }: IntroProps) {
+	const { playHover, playClick } = useButtonSounds();
 	return (
 		<div
 			style={{
@@ -54,7 +57,11 @@ export default function Intro({ onContinue }: IntroProps) {
 
 				<button
 					type="button"
-					onClick={onContinue}
+					onMouseEnter={playHover}
+					onClick={() => {
+						playClick();
+						onContinue();
+					}}
 					style={{
 						marginTop: 20,
 						padding: "10px 18px",

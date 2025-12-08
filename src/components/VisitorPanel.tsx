@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useGameStore, type VisitorOption } from "../store/gameStore";
+import { useButtonSounds } from "../hooks/useButtonSounds";
 
 export default function VisitorPanel() {
 	const visitor = useGameStore((state) => state.currentVisitor);
@@ -12,6 +13,7 @@ export default function VisitorPanel() {
 	const showDaySummary = useGameStore((state) => state.showDaySummary);
 	const [displayedText, setDisplayedText] = useState("");
 	const [isTyping, setIsTyping] = useState(false);
+	const { playHover, playClick } = useButtonSounds();
 
 	const playerName = useGameStore((state) => state.player.name);
 	function resolveText(text: string): string {
@@ -143,7 +145,11 @@ export default function VisitorPanel() {
 
 						return (
 							<button
-								onClick={() => handleOptionClick(option)}
+								onMouseEnter={playHover}
+								onClick={() => {
+									playClick();
+									handleOptionClick(option);
+								}}
 								disabled={notEnoughCoins || gameOver}
 								style={{
 									display: "block",
