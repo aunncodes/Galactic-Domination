@@ -260,7 +260,7 @@ function resolveWar(params: {
 	if (youWin) {
 		if (type === "defense") {
 			resultText = "Your forces prevail and the planet is successfully defended.";
-			newHappiness =params.happiness + 5;
+			newHappiness = Math.min(100, params.happiness + 5);
 		} else {
 			if (enemyPlanetId) {
 				newPlanets = params.planets.map((p) => (p.id === enemyPlanetId ? { ...p, owned: true } : p));
@@ -268,7 +268,7 @@ function resolveWar(params: {
 			} else {
 				resultText = "Your attack is successful.";
 			}
-			newHappiness = params.happiness + 5;
+			newHappiness = Math.min(100, params.happiness + 5);
 		}
 	} else {
 		if (type === "defense") {
@@ -762,7 +762,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 			let ownedCount = ownedPlanets.length;
 			coins = Math.max(0, coins);
 			happiness = Math.max(0, happiness);
-			taxRate = Math.max(0, taxRate);
+			taxRate = Math.max(0, Math.min(0.5, taxRate));
 			rebellionChance = Math.max(0, rebellionChance);
 
 			if (special === "start_bounty_contract") {
@@ -802,12 +802,12 @@ export const useGameStore = create<GameState>((set, get) => ({
 				const win = Math.random() < 0.5;
 				if (win) {
 					coins += 150;
-					happiness += 10;
+					happiness = Math.min(100, happiness + 10);
 					rebellionChance -= 5;
 					extraReactionParts.push("You are an eggstraordinary being. Your vaults are now filled to the brim.");
 				} else {
-					coins -= 75;
-					happiness -= 15;
+					coins = Math.max(0, coins - 75);
+					happiness = Math.max(0, happiness - 15);
 					rebellionChance += 5;
 					extraReactionParts.push("Your empire is slowly quacking apart. Your wealth and reputation are flying away.");
 				}
@@ -913,7 +913,7 @@ export const useGameStore = create<GameState>((set, get) => ({
 
 				if (endOfDay) {
 					if (happiness < 10) {
-						rebellionChance += 3;
+						rebellionChance = Math.min(100, rebellionChance + 3);
 					}
 					const rebellionThreshold = 30;
 					if (rebellionChance >= rebellionThreshold && !gameOver) {
