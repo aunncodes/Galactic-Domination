@@ -554,7 +554,6 @@ export const useGameStore = create<GameState>((set, get) => ({
 							text: "Yes, keep hunting. (-30 Coins)",
 							effects: {
 								coins: -30,
-								rebellionDelta: -5,
 								special: "bounty_continue_contract",
 							},
 							reaction: "Understood. I will keep tracking them. My fee rises with every passing day.",

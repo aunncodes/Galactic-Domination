@@ -10,17 +10,17 @@
 				"text": "Very well then. The bread of the poor shall fill my vaults. (+2% tax rate)",
 				"effects": {
 					"coins": 20,
-					"happiness": -8,
+					"happiness": -25,
 					"taxRateDelta": 0.02,
-					"rebellionDelta": 4
+					"rebellionDelta": 10
 				},
 				"reaction": "Yes, my liege; your word is my command. Their bread shall be ours."
 			},
 			{
 				"text": "Fire the analysts. Clearly, their work ducks. Taxes shall not be raised.",
 				"effects": {
-					"happiness": 6,
-					"rebellionDelta": -3
+					"happiness": 10,
+					"rebellionDelta": -10
 				},
 				"reaction": "Yes, my liege. We cannot risk ruffling the feathers of our fellow ducks."
 			}
@@ -37,11 +37,11 @@
 		},
 		"options": [
 			{
-				"text": "You have convinced me, I shall take the burden off your wings. (-5% tax rate)",
+				"text": "You have convinced me, I shall take the burden off your wings. (-5% tax rate, -40 coins)",
 				"effects": {
 					"taxRateDelta": -0.05,
+					"coins": -40,
 					"happiness": 10,
-					"rebellionDelta": -10
 				},
 				"reaction": "Thank you, my lord. You have restored my hope for the future. May the whole empire quack your praises."
 			},
@@ -118,7 +118,7 @@
 				"effects": {
 					"coins": -40,
 					"happiness": 5,
-					"rebellionDelta": -10,
+					"rebellionDelta": -5,
 					"special": "start_bounty_contract"
 				},
 				"reaction": "Your quarry is mine, my lord. I will bring you news one way or another."
